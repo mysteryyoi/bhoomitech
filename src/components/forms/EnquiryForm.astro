@@ -1,0 +1,124 @@
+---
+import type { FormConfig, FormType } from '../../scripts/forms/config';
+import { INDIAN_MOBILE_PATTERN, FARM_TYPES, FARMER_NEEDS, CALL_TIMES, CALL_LANGUAGES } from '../../scripts/forms/fields';
+
+interface Props {
+  formType: FormType;
+  config: FormConfig | null;
+  turnstileSiteKey?: string;
+}
+const { formType, config, turnstileSiteKey } = Astro.props;
+const isSoftware = formType === 'software-demo';
+const id = (name: string) => `${formType}-${name}`;
+---
+{!config ? (
+  <p>Not configured. Set the provider's PUBLIC_* variables (see .env.example).</p>
+) : (
+  <form
+    class="enquiry-form"
+    method="post"
+    action={config.action}
+    data-enquiry-form
+    data-form-type={formType}
+    data-honeypot={config.honeypotField}
+  >
+    {Object.entries(config.hidden).map(([name, value]) => <input type="hidden" name={name} value={value} />)}
+    <input type="hidden" name="source_page" value={Astro.url.pathname} />
+    <input type="hidden" name="lang" value="en" />
+
+    <div class="hp" aria-hidden="true">
+      <input type="text" name={config.honeypotField} tabindex="-1" autocomplete="off" />
+    </div>
+
+    {isSoftware ? (
+      <>
+        <div class="field">
+          <label for={id('name')}>Your name</label>
+          <input id={id('name')} name="name" type="text" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for={id('company')}>Farm or company name</label>
+          <input id={id('company')} name="company" type="text" autocomplete="organization" required />
+        </div>
+        <div class="field">
+          <label for={id('email')}>Work email</label>
+          <input id={id('email')} name="email" type="email" autocomplete="email" required />
+        </div>
+        <div class="field">
+          <label for={id('phone')}>Phone or WhatsApp (optional)</label>
+          <input id={id('phone')} name="phone" type="tel" inputmode="tel" autocomplete="tel" />
+        </div>
+        <div class="field">
+          <label for={id('farm-type')}>Type of farm</label>
+          <select id={id('farm-type')} name="farm_type" required>
+            <option value="">Select</option>
+            {FARM_TYPES.map((t) => <option value={t}>{t}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for={id('message')}>Anything you'd like us to know (optional)</label>
+          <textarea id={id('message')} name="message" maxlength="500" rows="4"></textarea>
+        </div>
+      </>
+    ) : (
+      <>
+        <div class="field">
+          <label for={id('name')}>Your name</label>
+          <input id={id('name')} name="name" type="text" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for={id('mobile')}>Mobile number</label>
+          <input
+            id={id('mobile')}
+            name="mobile"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            pattern={INDIAN_MOBILE_PATTERN}
+            title="Please check the number. It should have 10 digits."
+            required
+          />
+        </div>
+        <div class="field">
+          <label for={id('location')}>Village / town and district</label>
+          <input id={id('location')} name="location" type="text" required />
+        </div>
+        <fieldset>
+          <legend>What do you need help with? (optional)</legend>
+          {FARMER_NEEDS.map((n) => (
+            <label class="check"><input type="checkbox" name="needs" value={n} /> {n}</label>
+          ))}
+        </fieldset>
+        <div class="field">
+          <label for={id('call-time')}>Best time to call (optional)</label>
+          <select id={id('call-time')} name="call_time">
+            <option value="">No preference</option>
+            {CALL_TIMES.map((t) => <option value={t}>{t}</option>)}
+          </select>
+        </div>
+        <div class="field">
+          <label for={id('language')}>Language (optional)</label>
+          <select id={id('language')} name="language">
+            <option value="">No preference</option>
+            {CALL_LANGUAGES.map((t) => <option value={t}>{t}</option>)}
+          </select>
+        </div>
+      </>
+    )}
+
+    {isSoftware && turnstileSiteKey && (
+      <>
+        <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+        <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+      </>
+    )}
+
+    <button type="submit">{isSoftware ? 'Request a demo' : 'Send enquiry'}</button>
+    <p data-form-status role="status" aria-live="polite"></p>
+    <p class="consent">
+      {isSoftware
+        ? "By sending this, you agree that Bhoomi Tech may contact you about your enquiry. We won't share your details."
+        : "By sending, you agree that Bhoomi Tech may call or WhatsApp you about this. We won't share your details."}
+    </p>
+  </form>
+)}

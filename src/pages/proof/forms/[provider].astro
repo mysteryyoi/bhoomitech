@@ -1,0 +1,42 @@
+---
+import '../../../styles/layers.css';
+import '../../../styles/tokens.css';
+import '../../../styles/proof.css';
+import EnquiryForm from '../../../components/forms/EnquiryForm.astro';
+import { getFormConfig, resolveOrigin, type Provider } from '../../../scripts/forms/config';
+
+export function getStaticPaths() {
+  return [{ params: { provider: 'web3forms' } }, { params: { provider: 'formspree' } }];
+}
+
+const provider = Astro.params.provider as Provider;
+const origin = resolveOrigin(process.env);
+const software = getFormConfig(provider, 'software-demo', import.meta.env, origin);
+const farmer = getFormConfig(provider, 'farmer-services', import.meta.env, origin);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Form proof · {provider}</title>
+  </head>
+  <body>
+    <main>
+      <h1>Form proof · {provider}</h1>
+      <section>
+        <h2>Software demo</h2>
+        <EnquiryForm formType="software-demo" config={software} turnstileSiteKey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY} />
+      </section>
+      <section>
+        <h2>Farmer services</h2>
+        <EnquiryForm formType="farmer-services" config={farmer} />
+      </section>
+    </main>
+    <script>
+      import { enhanceForm } from '../../../scripts/forms/enhance';
+      document.querySelectorAll<HTMLFormElement>('form[data-enquiry-form]').forEach((f) => enhanceForm(f));
+    </script>
+  </body>
+</html>
