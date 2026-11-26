@@ -26,10 +26,8 @@ jobs:
       # Production-mode rebuild so Lighthouse never sees e2e keys.
       - run: npm run build
 
-      - name: Lighthouse
-        run: |
-          export CHROME_PATH="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")"
-          npm run lhci
+      # lhci autodetects the runner's preinstalled Google Chrome.
+      - run: npm run lhci
 
       - name: Upload reports on failure
         if: failure()
