@@ -77,6 +77,7 @@ describe('submitEnquiry', () => {
     expect((init.body as FormData).get('name')).toBe('Asha');
     expect(init.headers).toEqual({ Accept: 'application/json' });
     expect(init.signal).toBeInstanceOf(AbortSignal);
+    expect(init.redirect).toBe('error');
   });
 
   it('accepts {success:true} (Web3Forms)', async () => {
@@ -97,6 +98,38 @@ describe('submitEnquiry', () => {
   it('rejects a 4xx', async () => {
     const fetchImpl = vi.fn().mockResolvedValue(json({ errors: [{ message: 'bad' }] }, 422));
     expect(await submitEnquiry(makeForm(), { ...base, fetchImpl })).toEqual({ state: 'rejected' });
+  });
+
+  it.each([503, 500, 408])('reports unconfirmed for an ambiguous HTTP %i', async (status) => {
+    const fetchImpl = vi.fn().mockResolvedValue(json({}, status));
+    expect(await submitEnquiry(makeForm(), { ...base, fetchImpl })).toEqual({ state: 'unconfirmed' });
+  });
+
+  it('rejects a 200 with {ok:false} (Formspree)', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(json({ ok: false }));
+    expect(await submitEnquiry(makeForm(), { ...base, fetchImpl })).toEqual({ state: 'rejected' });
+  });
+
+  it('does not send fields marked data-native-only, but sends the rest', async () => {
+    const form = makeForm();
+    form.insertAdjacentHTML('beforeend', '<input type="hidden" name="redirect" value="https://x.test/thanks/" data-native-only />');
+    const fetchImpl = vi.fn().mockResolvedValue(json({ success: true }));
+    await submitEnquiry(form, { ...base, fetchImpl });
+    const body = fetchImpl.mock.calls[0][1].body as FormData;
+    expect(body.has('redirect')).toBe(false);
+    expect(body.get('name')).toBe('Asha');
+    expect(body.get('email')).toBe('asha@example.test');
+  });
+
+  it('sends the payload as validated, ignoring edits made during the time-trap wait', async () => {
+    vi.useFakeTimers();
+    const form = makeForm();
+    const fetchImpl = vi.fn().mockResolvedValue(json({ success: true }));
+    const p = submitEnquiry(form, { ...base, now: () => 2_000, fetchImpl });
+    (form.elements.namedItem('name') as HTMLInputElement).value = 'Changed';
+    await vi.advanceTimersByTimeAsync(1000);
+    expect((fetchImpl.mock.calls[0][1].body as FormData).get('name')).toBe('Asha');
+    await p;
   });
 
   it('reports unconfirmed when a 2xx body is not JSON', async () => {

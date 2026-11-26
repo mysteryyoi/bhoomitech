@@ -22,7 +22,9 @@ const id = (name: string) => `${formType}-${name}`;
     data-form-type={formType}
     data-honeypot={config.honeypotField}
   >
-    {Object.entries(config.hidden).map(([name, value]) => <input type="hidden" name={name} value={value} />)}
+    {Object.entries(config.hidden).map(([name, value]) => (
+      <input type="hidden" name={name} value={value} data-native-only={name === 'redirect' || name === '_next' ? '' : undefined} />
+    ))}
     <input type="hidden" name="source_page" value={Astro.url.pathname} />
     <input type="hidden" name="lang" value="en" />
 
@@ -109,6 +111,7 @@ const id = (name: string) => `${formType}-${name}`;
     {isSoftware && turnstileSiteKey && (
       <>
         <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+        <noscript><p>This form uses a spam check that needs JavaScript. Please turn JavaScript on to send it.</p></noscript>
         <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
       </>
     )}
@@ -122,3 +125,13 @@ const id = (name: string) => `${formType}-${name}`;
     </p>
   </form>
 )}
+
+<style>
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>

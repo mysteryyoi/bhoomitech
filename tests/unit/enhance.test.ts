@@ -26,7 +26,18 @@ const flush = () => new Promise((r) => setTimeout(r, 0));
 
 afterEach(() => {
   document.body.innerHTML = '';
+  delete (window as { turnstile?: unknown }).turnstile;
 });
+
+function setupTurnstile(submit: ReturnType<typeof vi.fn>, token: string | null) {
+  const ctx = setup(submit);
+  ctx.form.insertAdjacentHTML(
+    'afterbegin',
+    '<div class="cf-turnstile"></div>' + (token === null ? '' : `<input type="hidden" name="cf-turnstile-response" value="${token}">`),
+  );
+  ctx.name.value = 'Asha';
+  return ctx;
+}
 
 describe('enhanceForm', () => {
   it('marks the form invalid and focuses the first invalid field without sending', () => {
@@ -117,6 +128,41 @@ describe('enhanceForm', () => {
     fire(form);
     await flush();
     expect(submit).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not submit until the Turnstile token is present', () => {
+    const submit = vi.fn();
+    const { form, status } = setupTurnstile(submit, '');
+    fire(form);
+    expect(submit).not.toHaveBeenCalled();
+    expect(form.dataset.state).toBe('invalid');
+    expect(status.textContent).toBe(STATUS_COPY.challenge);
+  });
+
+  it('does not submit when the Turnstile response field is missing', () => {
+    const submit = vi.fn();
+    const { form } = setupTurnstile(submit, null);
+    fire(form);
+    expect(submit).not.toHaveBeenCalled();
+    expect(form.dataset.state).toBe('invalid');
+  });
+
+  it('submits when the Turnstile token is present', async () => {
+    const submit = vi.fn().mockResolvedValue({ state: 'rejected' });
+    const { form } = setupTurnstile(submit, 'tok');
+    fire(form);
+    await flush();
+    expect(submit).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['accepted', 'rejected', 'unconfirmed'] as const)('resets Turnstile after a %s outcome', async (state) => {
+    const reset = vi.fn();
+    (window as { turnstile?: unknown }).turnstile = { reset };
+    const submit = vi.fn().mockResolvedValue({ state });
+    const { form } = setupTurnstile(submit, 'tok');
+    fire(form);
+    await flush();
+    expect(reset).toHaveBeenCalledTimes(1);
   });
 
   it('turns off native validation once enhanced', () => {

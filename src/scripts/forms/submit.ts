@@ -30,6 +30,12 @@ export async function submitEnquiry(
     return { state: 'accepted', spam: true };
   }
 
+  // Snapshot before any wait so the validated payload is what gets sent.
+  const payload = new FormData(form);
+  form.querySelectorAll<HTMLInputElement>('[data-native-only]').forEach((el) => {
+    if (el.name) payload.delete(el.name);
+  });
+
   const remaining = minFillMs - (now() - opts.loadedAt);
   if (remaining > 0) {
     await new Promise<void>((resolve) => setTimeout(resolve, remaining));
@@ -42,10 +48,13 @@ export async function submitEnquiry(
   try {
     const res = await doFetch(form.action, {
       method: 'POST',
-      body: new FormData(form),
+      body: payload,
       headers: { Accept: 'application/json' },
       signal: controller.signal,
+      redirect: 'error',
     });
+    // A 5xx or timeout may arrive after the provider stored the enquiry.
+    if (res.status >= 500 || res.status === 408) return { state: 'unconfirmed' };
     if (!res.ok) return { state: 'rejected' };
 
     let body: { success?: unknown; ok?: unknown };

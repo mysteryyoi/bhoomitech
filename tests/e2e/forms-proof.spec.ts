@@ -37,6 +37,7 @@ test('JS: software demo is accepted and the form resets', async ({ page }) => {
   expect(posts).toHaveLength(1);
   expect(posts[0]).toContain('software-demo');
   expect(posts[0]).toContain('e2e-w3f-software');
+  expect(posts[0]).not.toContain('redirect=');
 });
 
 test('JS: a network failure is unconfirmed, keeps values and does not retry', async ({ page }) => {
@@ -80,4 +81,12 @@ test.describe('no JavaScript', () => {
     await expect(page).toHaveURL(/\/proof\/forms\/formspree\/$/);
     expect(calls).toBe(0);
   });
+});
+
+test('honeypot is hidden from sight and the tab order', async ({ page }) => {
+  await page.goto('/proof/forms/web3forms/');
+  const hp = page.locator('form[data-form-type="software-demo"] input[name="botcheck"]');
+  await expect(hp).toHaveAttribute('tabindex', '-1');
+  const box = await hp.boundingBox();
+  expect(box === null || box.x + box.width <= 0).toBe(true); // off-screen, not in the layout
 });

@@ -1,7 +1,8 @@
 import { submitEnquiry } from './submit';
 
-export const STATUS_COPY: Record<'invalid' | 'sending' | 'accepted' | 'rejected' | 'unconfirmed', string> = {
+export const STATUS_COPY: Record<'invalid' | 'challenge' | 'sending' | 'accepted' | 'rejected' | 'unconfirmed', string> = {
   invalid: 'Please check the highlighted fields.',
+  challenge: 'Please wait a moment for the spam check to finish, then send again.',
   sending: 'Sending…',
   accepted: 'Your enquiry was submitted. Thank you.',
   rejected: "We couldn't submit your enquiry. Your details are still here, so you can try again.",
@@ -49,6 +50,15 @@ export function enhanceForm(
       return;
     }
 
+    if (form.querySelector('.cf-turnstile')) {
+      const token = form.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]');
+      if (!token || !token.value) {
+        setState('challenge');
+        form.dataset.state = 'invalid';
+        return;
+      }
+    }
+
     inFlight = true;
     setState('sending');
     if (button) button.disabled = true;
@@ -60,6 +70,7 @@ export function enhanceForm(
         outcome = { state: 'unconfirmed' as const };
       }
       setState(outcome.state);
+      if (form.querySelector('.cf-turnstile')) (window as unknown as { turnstile?: { reset(): void } }).turnstile?.reset();
       if (outcome.state === 'accepted') form.reset();
     } finally {
       if (button) button.disabled = false;
