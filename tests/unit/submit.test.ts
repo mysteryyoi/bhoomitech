@@ -28,11 +28,41 @@ describe('submitEnquiry', () => {
     expect(fetchImpl).not.toHaveBeenCalled();
   });
 
-  it('treats a submit faster than minFillMs as accepted spam without sending', async () => {
-    const fetchImpl = vi.fn();
-    const out = await submitEnquiry(makeForm(), { ...base, now: () => 2_999, fetchImpl });
-    expect(out).toEqual({ state: 'accepted', spam: true });
+  it('waits until minFillMs has elapsed before sending a fast submit', async () => {
+    vi.useFakeTimers();
+    const fetchImpl = vi.fn().mockResolvedValue(json({ success: true }));
+    const p = submitEnquiry(makeForm(), { ...base, now: () => 2_000, fetchImpl });
+    await vi.advanceTimersByTimeAsync(999);
     expect(fetchImpl).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect(await p).toEqual({ state: 'accepted' });
+  });
+
+  it('starts the abort timeout only when the request is sent', async () => {
+    vi.useFakeTimers();
+    let signal!: AbortSignal;
+    const fetchImpl = vi.fn((_u: unknown, init?: RequestInit) => {
+      signal = init!.signal!;
+      return new Promise<Response>(() => {});
+    });
+    void submitEnquiry(makeForm(), {
+      ...base,
+      now: () => 2_000,
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+      timeoutMs: 5000,
+    });
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(4999);
+    expect(signal.aborted).toBe(false);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(signal.aborted).toBe(true);
+  });
+
+  it.each([['{}', {}], ['null', null]])('reports unconfirmed when a 200 JSON body is %s', async (_n, body) => {
+    const fetchImpl = vi.fn().mockResolvedValue(json(body));
+    expect(await submitEnquiry(makeForm(), { ...base, fetchImpl })).toEqual({ state: 'unconfirmed' });
   });
 
   it('posts the form once as FormData with Accept: application/json', async () => {

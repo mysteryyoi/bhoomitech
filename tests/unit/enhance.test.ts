@@ -105,6 +105,20 @@ describe('enhanceForm', () => {
     },
   );
 
+  it('treats a throwing submit as unconfirmed and allows a later submit', async () => {
+    const submit = vi.fn().mockRejectedValue(new Error('boom'));
+    const { form, name, button } = setup(submit);
+    name.value = 'Asha';
+    fire(form);
+    await flush();
+    expect(form.dataset.state).toBe('unconfirmed');
+    expect(button.disabled).toBe(false);
+    expect(name.value).toBe('Asha');
+    fire(form);
+    await flush();
+    expect(submit).toHaveBeenCalledTimes(2);
+  });
+
   it('turns off native validation once enhanced', () => {
     const { form } = setup(vi.fn());
     expect(form.noValidate).toBe(true);

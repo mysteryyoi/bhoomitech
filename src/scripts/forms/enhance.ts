@@ -52,15 +52,18 @@ export function enhanceForm(
     inFlight = true;
     setState('sending');
     if (button) button.disabled = true;
-    let outcome;
     try {
-      outcome = await submit(form, { loadedAt, honeypotField: form.dataset.honeypot! });
-    } catch {
-      outcome = { state: 'unconfirmed' as const };
+      let outcome;
+      try {
+        outcome = await submit(form, { loadedAt, honeypotField: form.dataset.honeypot! });
+      } catch {
+        outcome = { state: 'unconfirmed' as const };
+      }
+      setState(outcome.state);
+      if (outcome.state === 'accepted') form.reset();
+    } finally {
+      if (button) button.disabled = false;
+      inFlight = false;
     }
-    setState(outcome.state);
-    if (outcome.state === 'accepted') form.reset();
-    if (button) button.disabled = false;
-    inFlight = false;
   });
 }

@@ -9,6 +9,7 @@ export interface SubmitOptions {
   now?: () => number;
   fetchImpl?: typeof fetch;
   timeoutMs?: number;
+  /** Minimum time since load before sending; faster submits are delayed, never dropped. */
   minFillMs?: number;
 }
 
@@ -25,8 +26,13 @@ export async function submitEnquiry(
   const minFillMs = opts.minFillMs ?? 3000;
 
   const honeypot = form.elements.namedItem(opts.honeypotField) as HTMLInputElement | null;
-  if ((honeypot && honeypot.value) || now() - opts.loadedAt < minFillMs) {
+  if (honeypot && honeypot.value) {
     return { state: 'accepted', spam: true };
+  }
+
+  const remaining = minFillMs - (now() - opts.loadedAt);
+  if (remaining > 0) {
+    await new Promise<void>((resolve) => setTimeout(resolve, remaining));
   }
 
   const doFetch = opts.fetchImpl ?? globalThis.fetch.bind(globalThis);
