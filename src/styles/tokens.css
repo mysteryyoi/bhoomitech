@@ -1,0 +1,72 @@
+@layer tokens {
+  :root {
+    /* Colour (design/tokens.ts is the source; tests keep them in sync) */
+    --color-soil-950: #0b100b;
+    --color-soil-900: #101610;
+    --color-soil-800: #172218;
+    --color-soil-700: #202b1b;
+    --color-line-700: #30382e;
+    --color-line-600: #495143;
+    --color-moss-600: #294a20;
+    --color-leaf-500: #629e36;
+    --color-lime-400: #b8ed79;
+    --color-lime-200: #e2ffb0;
+    --color-ink-50: #f3f5eb;
+    --color-ink-400: #a1aaa0;
+    --color-ink-700: #4a5446;
+    --color-husk-100: #f2eee3;
+    --color-husk-200: #e6e0d0;
+    --color-fern-700: #3a6b22;
+    --color-sun-400: #f2b544;
+    --color-water-400: #7cc8d8;
+    --color-clay-500: #d1683a;
+    --color-loam-800: #2b2219;
+    --color-loam-600: #4a3a2a;
+
+    /* Type: fluid scale (4.3) */
+    --step-display-xl: clamp(56px, 11vw, 200px);
+    --step-display-l: clamp(44px, 7vw, 120px);
+    --step-h2: clamp(36px, 4.6vw, 72px);
+    --step-h3: clamp(24px, 2.4vw, 36px);
+    --text-body-l: 20px;
+    --text-body: 17px;
+    --text-small: 14px;
+
+    /* Font stacks (GT Alpina licence still open; Fraunces is the fallback) */
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-sans: 'Geist', system-ui, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, monospace;
+
+    /* Spacing: 4px base (4.7) */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
+    --space-9: 96px;
+    --space-10: 128px;
+    --space-11: 192px;
+    --space-12: 256px;
+
+    /* Radii */
+    --radius-pill: 999px;
+    --radius-card: 4px;
+    --radius-photo: 0;
+
+    /* Motion (5.2) */
+    --ease-machine: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-nature: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-in: cubic-bezier(0.5, 0, 0.75, 0);
+    --dur-instant: 120ms;
+    --dur-quick: 240ms;
+    --dur-base: 480ms;
+    --dur-slow: 900ms;
+    --dur-growth: 1600ms;
+    --stagger-line: 70ms;
+    --stagger-item: 50ms;
+  }
+}
