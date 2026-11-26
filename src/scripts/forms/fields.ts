@@ -1,5 +1,5 @@
 // Pattern attribute value; browsers compile it with the v flag, so `-` is escaped in classes.
-export const INDIAN_MOBILE_PATTERN = '(?:\\+?91[ \\-]?|0)?[6-9][0-9]{4}[ \\-]?[0-9]{5}';
+export const INDIAN_MOBILE_PATTERN = ' *(?:\\+?91[ \\-]?|0[ \\-]?)?[6-9](?:[ \\-]?[0-9]){9} *';
 
 export const FARM_TYPES = ['Greenhouse', 'Polyhouse', 'Open field', 'Hydroponic', 'Vertical', 'Other', 'Not sure'] as const;
 
