@@ -5,6 +5,13 @@ on:
   push:
     branches: [main, 'phase-*']
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -25,6 +32,9 @@ jobs:
 
       # Production-mode rebuild so Lighthouse never sees e2e keys.
       - run: npm run build
+
+      - name: Fail if an e2e fake key reached the production build
+        run: '! grep -rqE "e2e-w3f-|e2esoftware|e2efarmer" dist'
 
       # lhci autodetects the runner's preinstalled Google Chrome.
       - run: npm run lhci
