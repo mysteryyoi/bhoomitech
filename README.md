@@ -1,13 +1,30 @@
-# Bhoomitech placeholder
+# Bhoomitech website
 
-A responsive, static coming-soon page for **bhoomitech.in**. No build step or JavaScript is required.
+Static site for **bhoomitech.in**, built with Astro.
 
-## Preview
+## Requirements
 
-From this directory run `python -m http.server 4173 --directory dist` and open http://localhost:4173.
+- Node 24.22.3 (see `.node-version`)
+
+## Run
+
+```
+npm ci
+npm run dev
+```
+
+## Test
+
+```
+npm run check
+npm run test:unit
+npm run test:e2e
+```
+
+## Build
+
+`npm run build` writes `dist/`. It is build output and is not committed.
 
 ## Hosting
 
-Upload the contents of `dist` to any static web host. Connecting `bhoomitech.in` requires access to the domain's DNS and hosting configuration. The Sites preview is separate from that domain.
-
-The page does not collect visitor information. Google Fonts is optional; system fonts are used if it is unavailable. The illustration and favicon are included locally.
+GitHub Pages until the Phase 0 DNS cutover, then Cloudflare Pages.
