@@ -9,7 +9,7 @@ const blocks = Object.fromEntries(
 );
 
 it('marks preview hosts, proof and thanks pages noindex', () => {
-  for (const p of ['https://:project.pages.dev/*', '/proof/*', '/thanks/*'])
+  for (const p of ['https://:project.pages.dev/*', 'https://:version.:project.pages.dev/*', '/proof/*', '/thanks/*'])
     expect(blocks[p]).toContain('X-Robots-Tag: noindex');
 });
 it('sets baseline security headers on every path', () => {
@@ -21,4 +21,8 @@ it('sets baseline security headers on every path', () => {
 });
 it('caches hashed build assets immutably', () => {
   expect(blocks['/_astro/*']).toContain('Cache-Control: public, max-age=31536000, immutable');
+});
+it('uses the Cloudflare _headers layout: paths at column 0, headers indented by two spaces', () => {
+  const lines = readFileSync('public/_headers', 'utf8').split(/\r?\n/).filter((l) => l.trim() !== '');
+  for (const l of lines) expect(l).toMatch(/^(?:\S.*|  \S.*)$/);
 });
