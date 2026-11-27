@@ -1,6 +1,6 @@
 # Phase 0 handover
 
-**Branch:** `phase-0-foundation`, from `main` at `173f06b`. **Head:** `bbe0cbf` plus this note. **Not pushed, not merged.**
+**Branch:** `phase-0-foundation`, from `main` at `173f06b`. **Merged into `main` (fast-forward to `cb79ff6`) and live on bhoomitech.in since 27 Nov 2026.**
 **Plan:** `docs/superpowers/plans/2026-11-26-phase-0-foundation.md` · **Spec:** `docs/plan/00-master-plan.md`
 
 ## What's done (Tasks 1–6)
@@ -21,13 +21,23 @@
 
 **Final local check:** `check` 0 errors · unit 104/104 · e2e 7/7 · production build has no test keys · Lighthouse passes (performance 0.94–0.99, home weight 68 KB against a 320 KB budget, 0 KB JS).
 
-## Before merging (Rohit)
+## Merge result (27 Nov 2026)
 
-1. **Approve pushing `phase-0-foundation`** so CI runs on GitHub for the first time. Check on that run:
-   - Lighthouse launches the runner's preinstalled Chrome (never tried on Linux).
-   - LCP stays under the 3000ms budget (one local run hit 2884ms).
-2. **`.openai/hosting.json`** points an OpenAI Sites preview at `dist/`. `dist/` is now build output, not committed, so after the merge that preview has nothing to serve. bhoomitech.in is unaffected. Keep or delete the file: your call.
-3. **After the merge**, GitHub Pages serves the identical placeholder, built by the updated `deploy.yml`. `/proof/forms/*` will also exist on bhoomitech.in, noindex and unlinked, showing "Not configured". It's harmless, and it gets removed in Phase 2.
+- **CI on GitHub, first run.** It passed on both the branch (run 45942993079) and `main` (run 45943192383), every step green, including Lighthouse on the runner's own Chrome.
+- **Pages deploy.** Run 45943192459 was green. `deploy.yml` now builds the site on GitHub before publishing it.
+- **The live site matches the old one:**
+  - The homepage HTML is byte-identical to a local production build.
+  - Its markup matches the old hand-written `dist/index.html`, all 164 elements. Astro only removes whitespace between tags.
+  - `styles.css`, `favicon.svg` and `CNAME` match the old files once line endings are evened out.
+  - It renders correctly at desktop and 375px phone width, with no console errors.
+- **Domain and HTTPS.**
+  - HTTPS is valid.
+  - `www` redirects to the bare domain.
+  - DNS has all four GitHub Pages addresses.
+  - From the build PC, plain `http://` on port 80 connected only via 185.199.108.153; the other three timed out. That points to the local network. Cloudflare replaces this in Task 8.
+- **Proof pages.** `/proof/forms/{web3forms,formspree}/` and `/thanks/*` are live. They're noindex, unlinked, and show "Not configured", as expected. Phase 2 removes them. GitHub Pages ignores `_headers`; that file only matters once Cloudflare serves the site.
+- **Still open: `.openai/hosting.json`.** It points an OpenAI Sites preview at `dist/`, which is no longer committed, so that preview has nothing to serve. bhoomitech.in is unaffected. Keep or delete the file: your call.
+- **Follow-up.** GitHub warns that `actions/checkout@v4`, `setup-node@v4`, `configure-pages@v5`, `deploy-pages@v4` and `upload-artifact@v4` (pulled in by `upload-pages-artifact@v3`) run on deprecated Node 20. Bump them to their next majors.
 
 ## Task 7: accounts and form proof (owner + lead)
 
