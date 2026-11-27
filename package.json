@@ -15,6 +15,7 @@
     "lhci": "lhci autorun"
   },
   "dependencies": {
+    "@rive-app/canvas-lite": "2.50.0",
     "astro": "7.4.13"
   },
   "devDependencies": {

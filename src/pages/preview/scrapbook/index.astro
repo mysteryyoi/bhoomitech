@@ -1,0 +1,44 @@
+---
+// Preview of the new homepage scrapbook, built in parts. Not linked from the live site and not indexed.
+import '../../../styles/layers.css';
+import '../../../styles/tokens.css';
+import Scrapbook from '../../../components/scrapbook/Scrapbook.astro';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f2eee3">
+  <title>Bhoomi Tech: scrapbook preview</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- Preview only: fonts come from Google Fonts until they are self-hosted in Phase 1. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,400&family=Geist:wght@400;500&family=Geist+Mono:wght@500&display=swap">
+  <style>
+    @layer base {
+      html { background: var(--color-husk-100); }
+      body { margin: 0; font-family: var(--font-sans); color: var(--color-soil-900); }
+      .pv-bar {
+        display: flex; justify-content: space-between; align-items: center; gap: 12px;
+        padding: 12px max(16px, 2vw);
+        background: var(--color-soil-900); color: var(--color-husk-100);
+        font: 500 12px/1.3 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase;
+      }
+      .pv-end { padding: 18svh max(16px, 6vw); background: var(--color-soil-900); color: var(--color-husk-100); }
+      .pv-end p { max-width: 46ch; margin: 0; font: 400 clamp(18px, 2vw, 26px)/1.4 var(--font-sans); }
+    }
+  </style>
+</head>
+<body>
+  <div class="pv-bar"><span>Bhoomi Tech · homepage scrapbook</span><span>Preview · part 3 of 4</span></div>
+  <main>
+    <Scrapbook />
+    <section class="pv-end" aria-label="About this preview">
+      <p>This preview shows the whole scrapbook. The pictures are illustrations. The links at the end lead to pages that are not built yet.</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,441 @@
+/* The homepage scrapbook.
+   Default (no JavaScript, or reduced motion): spreads stack and read top to bottom.
+   html.sb-on (set by scripts/scrapbook): scrolling down moves the track sideways. */
+@layer components {
+  .sb {
+    --paper: var(--color-husk-100);
+    --card: #fbf8f0;
+    --ink: var(--color-soil-900);
+    --tape: rgb(222 212 186 / 0.78);
+    position: relative;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .22 0 0 0 0 .18 0 0 0 0 .1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* One spread: a stage that keeps a fixed shape, centred in the screen. */
+  .sb-spread {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 100svh;
+    padding-block: 3svh;
+    overflow: clip;
+  }
+  .sb-stage {
+    position: relative;
+    container-type: inline-size;
+    width: min(100vw, 160svh);
+    aspect-ratio: 2400 / 1500;
+  }
+
+  /* Everything on a stage is placed on its grid: 2400 × 1500 on wide screens. */
+  .sb-piece,
+  .sb-text,
+  .sb-note,
+  .sb-tag,
+  .sb-link,
+  .sb-way {
+    position: absolute;
+    box-sizing: border-box;
+    margin: 0;
+    left: calc(var(--x) / 2400 * 100%);
+    top: calc(var(--y) / 1500 * 100%);
+    width: calc(var(--w) / 2400 * 100%);
+  }
+
+  .sb-piece {
+    aspect-ratio: var(--aw) / var(--ah);
+    z-index: var(--layer);
+    transform: translate3d(calc(var(--p, 0) * var(--depth) * 40cqw), 0, 0)
+      rotate(calc(var(--tilt) * 1deg + var(--p, 0) * var(--depth) * 5deg));
+    filter: drop-shadow(0 0.35cqw 0.5cqw rgb(16 22 16 / 0.16));
+  }
+  .sb-piece img,
+  .sb-piece canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .sb-piece canvas {
+    opacity: 0;
+    transition: opacity var(--dur-quick) var(--ease-out);
+  }
+  .sb-piece.is-live canvas { opacity: 1; }
+  .sb-piece.is-live img { visibility: hidden; }
+
+  .sb-tap {
+    position: absolute;
+    left: 50%;
+    bottom: -0.6cqw;
+    translate: -50% 0;
+    z-index: 2;
+    display: none;
+    padding: 0.55cqw 1cqw;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--ink);
+    color: var(--paper);
+    font: 500 0.78cqw/1 var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .sb-piece.is-live .sb-tap { display: block; }
+  .sb-tap:focus-visible { outline: 2px solid var(--color-fern-700); outline-offset: 3px; }
+
+  .sb-text { z-index: 40; }
+  .sb-h1,
+  .sb-h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+  .sb-h1 { font-size: 7.4cqw; }
+  .sb-h2 { font-size: 4.2cqw; }
+  .sb-lead {
+    max-width: 30ch;
+    margin: 1.6cqw 0 0;
+    font-family: var(--font-sans);
+    font-size: 1.55cqw;
+    line-height: 1.4;
+    text-wrap: pretty;
+  }
+  .sb-cue {
+    margin: 2.4cqw 0 0;
+    font: 500 0.85cqw/1 var(--font-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .sb-cue span { display: inline-block; animation: sb-nudge 1.6s var(--ease-nature) infinite; }
+
+  .sb-note {
+    z-index: 35;
+    padding: 1.1cqw 1.4cqw 1.2cqw;
+    background: var(--card);
+    box-shadow: 0 0.25cqw 0.8cqw rgb(16 22 16 / 0.12);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.5cqw;
+    line-height: 1.3;
+    text-wrap: pretty;
+    transform: translate3d(calc(var(--p, 0) * 0.18 * 40cqw), 0, 0) rotate(calc(var(--tilt) * 1deg));
+  }
+  .sb-note::before {
+    content: '';
+    position: absolute;
+    top: -0.8cqw;
+    left: 50%;
+    width: 6cqw;
+    height: 1.6cqw;
+    background: var(--tape);
+    translate: -50% 0;
+    rotate: -3deg;
+  }
+
+  /* A paper price tag hanging on a string, swinging gently. */
+  .sb-tag {
+    z-index: 30;
+    transform: translate3d(calc(var(--p, 0) * var(--depth) * 40cqw), 0, 0);
+  }
+  .sb-tag-swing {
+    transform-origin: 50% 0;
+    animation: sb-swing 3.8s var(--ease-nature) infinite;
+  }
+  .sb-tag-swing::before {
+    content: '';
+    display: block;
+    width: 0.18cqw;
+    height: 5cqw;
+    margin-inline: auto;
+    background: var(--color-loam-600);
+  }
+  .sb-tag-card {
+    position: relative;
+    padding: 2.4cqw 1.4cqw 1.4cqw;
+    background: #f6ecd2;
+    clip-path: polygon(22% 0, 78% 0, 100% 16%, 100% 100%, 0 100%, 0 16%);
+    filter: drop-shadow(0 0.3cqw 0.5cqw rgb(16 22 16 / 0.15));
+    text-align: center;
+  }
+  .sb-tag-card::before {
+    content: '';
+    position: absolute;
+    top: 0.8cqw;
+    left: 50%;
+    width: 0.9cqw;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--paper);
+    box-shadow: inset 0 0 0 0.18cqw var(--color-loam-600);
+    translate: -50% 0;
+  }
+  .sb-tag-title {
+    margin: 0;
+    font: 500 0.8cqw/1.2 var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .sb-tag-figures {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.2em 0.5em;
+    margin: 0.8cqw 0 0;
+    font-family: var(--font-display);
+    font-size: 1.9cqw;
+    line-height: 1.1;
+  }
+  .sb-tag-figures s { color: var(--color-clay-500); text-decoration-thickness: 0.12em; }
+  .sb-tag-figures strong { font-weight: 700; }
+
+  /* A link pinned to a spread. */
+  .sb-link {
+    z-index: 45;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6em;
+    padding: 1cqw 1.4cqw;
+    border-radius: var(--radius-pill);
+    background: var(--ink);
+    color: var(--paper);
+    font: 500 0.95cqw/1 var(--font-mono);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transform: translate3d(calc(var(--p, 0) * 0.18 * 40cqw), 0, 0);
+  }
+  .sb-link:hover { background: var(--color-fern-700); }
+  .sb-link:focus-visible { outline: 2px solid var(--color-fern-700); outline-offset: 3px; }
+
+  /* A dashed route that draws itself as the spread arrives (fully drawn when --p is 0 or unset). */
+  .sb-route {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .sb-route--phone { display: none; }
+  .sb-route-line {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 16 14;
+  }
+  .sb-route-reveal {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 60;
+    stroke-dasharray: 1;
+    stroke-dashoffset: clamp(0, var(--p, 0) * 1.25, 1);
+  }
+
+  /* Closing tags: one way in for each kind of visitor. They sway, and wave when pointed at. */
+  .sb-way {
+    z-index: 40;
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .sb-way-swing {
+    display: block;
+    transform-origin: 50% 0;
+    rotate: calc(var(--tilt) * 1deg);
+    animation: sb-sway 5.5s var(--ease-nature) infinite;
+  }
+  .sb-way:nth-of-type(2n) .sb-way-swing { animation-duration: 6.4s; animation-delay: -1.8s; }
+  .sb-way:hover .sb-way-swing,
+  .sb-way:focus-visible .sb-way-swing { animation: sb-wave 1.3s var(--ease-nature); }
+  .sb-way-swing::before {
+    content: '';
+    display: block;
+    width: 0.18cqw;
+    height: calc(var(--str) / 2400 * 100cqw);
+    margin-inline: auto;
+    background: var(--color-loam-600);
+  }
+  .sb-way-card {
+    position: relative;
+    display: block;
+    padding: 3cqw 1.8cqw 1.8cqw;
+    background: var(--card);
+    clip-path: polygon(20% 0, 80% 0, 100% 12%, 100% 100%, 0 100%, 0 12%);
+    filter: drop-shadow(0 0.3cqw 0.6cqw rgb(16 22 16 / 0.16));
+  }
+  .sb-way-card::before {
+    content: '';
+    position: absolute;
+    top: 1cqw;
+    left: 50%;
+    width: 1cqw;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--paper);
+    box-shadow: inset 0 0 0 0.18cqw var(--color-loam-600);
+    translate: -50% 0;
+  }
+  .sb-way-kicker,
+  .sb-way-go {
+    display: block;
+    font: 500 0.8cqw/1.3 var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .sb-way-text {
+    display: block;
+    margin: 0.8cqw 0 1.4cqw;
+    font: 600 2.2cqw/1.05 var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  .sb-way-go { color: var(--color-fern-700); }
+  .sb-way:focus-visible { outline: 2px solid var(--color-fern-700); outline-offset: 4px; }
+
+  /* Chapter rail. */
+  .sb-rail {
+    position: absolute;
+    left: max(16px, 2vw);
+    bottom: max(14px, 2.4svh);
+    z-index: 60;
+  }
+  .sb-rail ol { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .sb-rail a {
+    display: block;
+    padding: 9px 12px;
+    border: 1px solid rgb(16 22 16 / 0.16);
+    border-radius: var(--radius-pill);
+    background: rgb(242 238 227 / 0.86);
+    color: var(--ink);
+    font: 500 11px/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .sb-rail-n { opacity: 0.55; }
+  .sb-rail a[aria-current='true'] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .sb-rail a:focus-visible { outline: 2px solid var(--color-fern-700); outline-offset: 2px; }
+
+  /* Sideways mode. */
+  html.sb-on .sb { height: var(--sb-h, auto); }
+  html.sb-on .sb-viewport {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    /* clip, not hidden: links and keyboard focus must not scroll this box sideways behind the script's back. */
+    overflow: clip;
+  }
+  html.sb-on .sb-track {
+    display: flex;
+    width: max-content;
+    height: 100%;
+    will-change: transform;
+  }
+  html.sb-on .sb-spread {
+    flex: none;
+    width: 100vw;
+    height: 100svh;
+    min-height: 0;
+    padding: 0;
+  }
+  html:not(.sb-on) .sb-rail { position: static; padding: 16px; }
+  .sb-mark { position: absolute; left: 0; width: 1px; height: 1px; pointer-events: none; }
+
+  /* Tall screens (phones): a 1000 × 1600 stage, phone positions, and some pieces left out. */
+  @media (max-aspect-ratio: 1/1) {
+    .sb-stage { width: min(100vw, 62.5svh); aspect-ratio: 1000 / 1600; }
+    .sb-piece,
+    .sb-text,
+    .sb-note,
+    .sb-tag,
+    .sb-link,
+    .sb-way {
+      left: calc(var(--mx) / 1000 * 100%);
+      top: calc(var(--my) / 1600 * 100%);
+      width: calc(var(--mw) / 1000 * 100%);
+    }
+    .sb-desk-only { display: none; }
+    .sb-h1 { font-size: 12.5cqw; }
+    .sb-h2 { font-size: 9cqw; }
+    .sb-lead { font-size: 4.3cqw; }
+    .sb-cue { font-size: 2.8cqw; margin-top: 4cqw; }
+    .sb-note { font-size: 4cqw; padding: 2.6cqw 3.2cqw; }
+    .sb-note::before { width: 14cqw; height: 3.6cqw; top: -1.8cqw; }
+    .sb-tap { font-size: 2.5cqw; padding: 1.6cqw 2.6cqw; bottom: -1.5cqw; }
+    .sb-rail { left: 50%; translate: -50% 0; }
+    .sb-rail a { padding: 8px 10px; font-size: 10px; }
+    .sb-piece { filter: none; }
+    .sb-tag-swing::before { width: 0.5cqw; height: 10cqw; }
+    .sb-tag-card { padding: 6cqw 3.4cqw 3.4cqw; }
+    .sb-tag-card::before { top: 2cqw; width: 2.4cqw; box-shadow: inset 0 0 0 0.5cqw var(--color-loam-600); }
+    .sb-tag-title { font-size: 2.4cqw; }
+    .sb-tag-figures { font-size: 5.4cqw; margin-top: 2cqw; }
+    .sb-link { font-size: 2.8cqw; padding: 3cqw 4cqw; }
+    .sb-route--desk { display: none; }
+    .sb-route--phone { display: block; }
+    .sb-route-line { stroke-width: 7; stroke-dasharray: 20 16; }
+    .sb-way-swing::before { width: 0.5cqw; height: 9cqw; }
+    .sb-way-card { padding: 7cqw 4.4cqw 4.4cqw; }
+    .sb-way-card::before { top: 2.4cqw; width: 2.6cqw; box-shadow: inset 0 0 0 0.5cqw var(--color-loam-600); }
+    .sb-way-kicker, .sb-way-go { font-size: 2.6cqw; }
+    .sb-way-text { font-size: 6cqw; margin: 2cqw 0 3cqw; }
+  }
+
+  /* Narrow screens: chapters other than the current one shrink to dots (each still a 24px tap target). */
+  @media (max-width: 1100px), (max-aspect-ratio: 1/1) {
+    html.sb-on .sb-rail ol { align-items: center; gap: 2px; }
+    html.sb-on .sb-rail a:not([aria-current='true']) {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      font-size: 0;
+    }
+    html.sb-on .sb-rail a:not([aria-current='true'])::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: rgb(16 22 16 / 0.32);
+    }
+  }
+
+  @keyframes sb-nudge {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0.4em 0; }
+  }
+  @keyframes sb-sway {
+    0%, 100% { rotate: calc(var(--tilt) * 1deg - 1.5deg); }
+    50% { rotate: calc(var(--tilt) * 1deg + 1.5deg); }
+  }
+  @keyframes sb-wave {
+    0% { rotate: calc(var(--tilt) * 1deg); }
+    25% { rotate: calc(var(--tilt) * 1deg + 7deg); }
+    50% { rotate: calc(var(--tilt) * 1deg - 5deg); }
+    75% { rotate: calc(var(--tilt) * 1deg + 2deg); }
+    100% { rotate: calc(var(--tilt) * 1deg); }
+  }
+  @keyframes sb-swing {
+    0%, 100% { rotate: -4deg; }
+    50% { rotate: 4deg; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sb-cue span,
+    .sb-tag-swing,
+    .sb-way-swing,
+    .sb-way:hover .sb-way-swing,
+    .sb-way:focus-visible .sb-way-swing { animation: none; }
+  }
+}

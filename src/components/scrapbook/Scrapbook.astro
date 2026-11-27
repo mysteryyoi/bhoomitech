@@ -1,0 +1,96 @@
+---
+// The homepage scrapbook. Without JavaScript, or with reduced motion, the spreads stack and read top to bottom.
+// With JavaScript, scrolling down moves the scrapbook sideways and the Rive pieces come alive (scripts/scrapbook).
+import { spreads, type Box } from '../../data/scrapbook';
+import '../../styles/scrapbook.css';
+
+const pos = (desk: Box, phone?: Box) =>
+  [
+    `--x:${desk.x}`, `--y:${desk.y}`, `--w:${desk.w}`,
+    ...(phone ? [`--mx:${phone.x}`, `--my:${phone.y}`, `--mw:${phone.w}`] : []),
+  ].join(';');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<div class="sb" data-scrapbook>
+  <div class="sb-viewport">
+    <nav class="sb-rail" aria-label="Chapters">
+      <ol>
+        {spreads.map((s, i) => (
+          <li><a href={`#${s.id}`} data-rail={s.id} aria-label={s.label}><span class="sb-rail-n">{String(i).padStart(2, '0')}</span> <span class="sb-rail-l">{s.label}</span></a></li>
+        ))}
+      </ol>
+    </nav>
+    <div class="sb-track" data-track>
+      {spreads.map((s) => (
+        <section class={`sb-spread sb-spread--${s.id}`} id={s.id} aria-labelledby={`${s.id}-h`} data-spread>
+          <div class="sb-stage">
+            <div class={`sb-text${s.level === 1 ? ' sb-text--cover' : ''}`} style={pos(s.text.desk, s.text.phone)}>
+              {s.level === 1
+                ? <h1 id={`${s.id}-h`} class="sb-h1">{s.heading}</h1>
+                : <h2 id={`${s.id}-h`} class="sb-h2">{s.heading}</h2>}
+              {s.lead && <p class="sb-lead">{s.lead}</p>}
+              {s.cue && <p class="sb-cue" aria-hidden="true">{s.cue} <span>→</span></p>}
+            </div>
+            {s.tags?.map((t) => (
+              <div class={`sb-tag${t.phone ? '' : ' sb-desk-only'}`} style={`${pos(t.desk, t.phone)};--depth:${t.depth}`} aria-hidden="true">
+                <div class="sb-tag-swing">
+                  <div class="sb-tag-card">
+                    <p class="sb-tag-title">{t.title}</p>
+                    <p class="sb-tag-figures">{t.was.map((w) => <s>{w}</s>)} <strong>{t.now}</strong></p>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {s.notes.map((n) => (
+              <p class={`sb-note${n.phone ? '' : ' sb-desk-only'}`} style={`${pos(n.desk, n.phone)};--tilt:${n.tilt ?? 0}`}>{n.text}</p>
+            ))}
+            {s.links?.map((l) => (
+              <a class={`sb-link${l.phone ? '' : ' sb-desk-only'}`} href={l.href} style={pos(l.desk, l.phone)}>{l.text} <span aria-hidden="true">→</span></a>
+            ))}
+            {s.route && ['desk', 'phone'].map((kind) => (
+              <svg class={`sb-route sb-route--${kind}`} viewBox={kind === 'desk' ? '0 0 2400 1500' : '0 0 1000 1600'} preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <mask id={`${s.id}-route-${kind}`} maskUnits="userSpaceOnUse">
+                    <path class="sb-route-reveal" d={kind === 'desk' ? s.route!.desk : s.route!.phone} pathLength="1" />
+                  </mask>
+                </defs>
+                <path class="sb-route-line" d={kind === 'desk' ? s.route!.desk : s.route!.phone} mask={`url(#${s.id}-route-${kind})`} />
+              </svg>
+            ))}
+            {s.ways?.map((w) => (
+              <a class="sb-way" href={w.href} style={`${pos(w.desk, w.phone)};--str:${w.string};--tilt:${w.tilt}`}>
+                <span class="sb-way-swing">
+                  <span class="sb-way-card">
+                    <span class="sb-way-kicker">{w.kicker}</span>
+                    <span class="sb-way-text">{w.text}</span>
+                    <span class="sb-way-go">{w.go} <span aria-hidden="true">→</span></span>
+                  </span>
+                </span>
+              </a>
+            ))}
+            {s.pieces.map((p, i) => (
+              <figure
+                class={`sb-piece${p.phone ? '' : ' sb-desk-only'}`}
+                style={`${pos(p.desk, p.phone)};--aw:${p.size[0]};--ah:${p.size[1]};--depth:${p.depth};--tilt:${p.tilt ?? 0};--layer:${i + 1}`}
+                data-piece={p.id}
+                data-riv={p.rive ? `${base}/scrapbook/riv/${p.file}.riv` : undefined}
+                data-control={p.control}
+              >
+                <img src={`${base}/scrapbook/svg/${p.file}.svg`} alt={p.alt} width={p.size[0]} height={p.size[1]} loading="lazy" decoding="async" />
+                {p.rive && <canvas aria-hidden="true"></canvas>}
+                {p.tapLabel && (
+                  <button type="button" class="sb-tap" data-tap>{p.tapLabel}</button>
+                )}
+              </figure>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  import { startScrapbook } from '../../scripts/scrapbook/scrapbook';
+  startScrapbook();
+</script>
