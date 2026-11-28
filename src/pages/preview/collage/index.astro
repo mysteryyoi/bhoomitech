@@ -1,0 +1,40 @@
+---
+// Preview of the homepage as a photo collage. Local only for now: not linked from the live site, not indexed.
+import '../../../styles/layers.css';
+import '../../../styles/tokens.css';
+import Collage from '../../../components/collage/Collage.astro';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#101610">
+  <title>Bhoomi Tech: photo collage preview</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- Preview only: fonts come from Google Fonts until they are self-hosted in Phase 1. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,400&family=Geist:wght@400;500&family=Geist+Mono:wght@500&display=swap">
+  <style>
+    @layer base {
+      html { background: var(--color-soil-900); }
+      body { margin: 0; font-family: var(--font-sans); color: var(--color-soil-900); }
+      .pv-end { padding: 16svh max(20px, 6vw); background: var(--color-soil-900); color: #f2eee3; }
+      .pv-end p { max-width: 52ch; margin: 0 0 1em; font: 400 clamp(17px, 1.7vw, 22px)/1.5 var(--font-sans); }
+      .pv-end p:first-child { font: 600 clamp(24px, 2.6vw, 36px)/1.2 var(--font-display); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <Collage />
+    <section class="pv-end" aria-label="About this preview">
+      <p>Photo collage preview</p>
+      <p>The landscapes, plants, animals, tools and objects are generated pictures. The produce, the shop and the phone screen stand in for real ones. The spaces marked “photo to come” are for real Bhoomi Tech photographs.</p>
+      <p>The links at the end lead to pages that are not built yet.</p>
+    </section>
+  </main>
+</body>
+</html>

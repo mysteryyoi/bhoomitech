@@ -1,0 +1,187 @@
+---
+// The homepage photo collage. Without JavaScript, or with reduced motion, the chapters stack and read
+// top to bottom as still pages. With JavaScript, scrolling down moves them sideways, each layer drifts at
+// its own depth, and the egret flies from chapter to chapter (scripts/collage).
+import { chapters, mediaFor, type MediaId, type Place } from '../../data/collage';
+import '../../styles/collage.css';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const src = (file: string) => `${base}/collage/img/${file}`;
+
+const pos = (desk: Place, phone?: Place) =>
+  [
+    `--x:${desk.x}`, `--y:${desk.y}`, `--w:${desk.w}`, `--r:${desk.r ?? 0}`,
+    ...(phone ? [`--mx:${phone.x}`, `--my:${phone.y}`, `--mw:${phone.w}`, `--mr:${phone.r ?? 0}`] : []),
+  ].join(';');
+
+function picture(id: MediaId, desk: Place, phone?: Place) {
+  const m = mediaFor(id);
+  const srcset = m.files.map((f) => `${src(f.file)} ${f.w}w`).join(', ');
+  const sizes = [
+    ...(phone ? [`(max-aspect-ratio: 1/1) ${Math.min(320, (phone.w / 1000) * 100 * 1.25).toFixed(1)}vw`] : []),
+    `${Math.min(160, (desk.w / 1600) * 100 * 1.12).toFixed(1)}vw`,
+  ].join(', ');
+  return { srcset, sizes, fallback: src(m.files[0].file), aspect: m.aspect, wheels: m.wheels };
+}
+
+const heading = (text: string) => text.split('*').map((part, i) => ({ part, em: i % 2 === 1 }));
+const stand = mediaFor('egret-stand');
+const peck = mediaFor('egret-peck');
+const fly = mediaFor('egret-fly');
+---
+<div class="cg" data-collage>
+  <div class="cg-viewport">
+    <header class="cg-bar">
+      <a class="cg-word" href="#bhoomi">Bhoomi Tech</a>
+      <nav class="cg-rail" aria-label="Chapters">
+        <ol>
+          {chapters.map((c, i) => (
+            <li><a href={`#${c.id}`} data-rail={c.id}><span class="cg-rail-n">{String(i + 1).padStart(2, '0')}</span> <span class="cg-rail-l">{c.label}</span></a></li>
+          ))}
+        </ol>
+      </nav>
+      <button type="button" class="cg-pause" data-pause aria-pressed="false" hidden>Pause motion</button>
+    </header>
+
+    <div class="cg-track" data-track>
+      {chapters.map((c, ci) => {
+        const bgs = c.pieces.filter((p) => p.z === 1);
+        const rest = c.pieces.filter((p) => p.z !== 1);
+        const e = c.egret;
+        const nextLabel = chapters[ci + 1]?.label;
+        return (
+          <section class={`cg-ch cg-ch--${c.id} is-${c.theme}`} id={c.id} aria-labelledby={`${c.id}-h`} data-chapter>
+            <div class="cg-stage">
+              {ci > 0 && <div class="cg-fringe" aria-hidden="true"></div>}
+              <div class="cg-page" aria-hidden="true">
+                <div class="cg-page-stage">
+                  {bgs.map((p) => {
+                    const pic = picture(p.img, p.desk, p.phone);
+                    return (
+                      <img class={`cg-pc cg-bg${p.fade ? ' cg-fade' : ''}`} style={`${pos(p.desk, p.phone)};--ar:${pic.aspect};--depth:${p.depth};--z:1`}
+                        srcset={pic.srcset} sizes={pic.sizes} src={pic.fallback} alt=""
+                        loading={ci < 2 ? 'eager' : 'lazy'} decoding="async" fetchpriority={ci === 0 ? 'high' : undefined} />
+                    );
+                  })}
+                  {c.glints?.map(([x, y], gi) => (
+                    <span class="cg-glint" style={`--x:${x};--y:${y};--depth:-0.06;--d:${(gi * 0.7) % 3}`}></span>
+                  ))}
+                  {c.rain && <div class="cg-rain"></div>}
+                  {c.rain && <div class="cg-flash"></div>}
+                </div>
+              </div>
+
+              {rest.map((p) => {
+                const pic = picture(p.img, p.desk, p.phone);
+                const drive = p.extra === 'wheels' ? ';--drive:-300' : '';
+                return (
+                  <div class={`cg-pc${p.phone ? '' : ' cg-desk-only'}`}
+                    style={`${pos(p.desk, p.phone)};--ar:${pic.aspect};--depth:${p.depth};--z:${p.z};--ax:${p.ax ?? 0.5};--ay:${p.ay ?? 0.5}${drive}`}>
+                    <div class={`cg-in${p.motion ? ` m-${p.motion}` : ''}`}>
+                      {p.extra === 'scan' && <span class="cg-scan" aria-hidden="true"></span>}
+                      <img srcset={pic.srcset} sizes={pic.sizes} src={pic.fallback} alt={p.alt ?? ''} loading={ci < 2 ? 'eager' : 'lazy'} decoding="async" />
+                      {p.extra === 'tape' && <span class="cg-tape" aria-hidden="true"></span>}
+                      {p.extra === 'sensor' && <span class="cg-led" aria-hidden="true"></span>}
+                      {p.extra === 'wheels' && pic.wheels?.slice(0, 1).map((wh) => (
+                        <img class="cg-wheel" src={src(wh.file)} alt="" style={`--wx:${wh.x};--wy:${wh.y};--wd:${wh.d}`} loading="lazy" decoding="async" />
+                      ))}
+                      {p.extra === 'screen' && (
+                        <span class="cg-screen" aria-hidden="true"><span class="cg-screen-in">
+                          <span class="cg-screen-top">Field 2 · 7:40 am</span>
+                          <span class="cg-screen-big">Soil is dry</span>
+                          <span class="cg-screen-bars"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                          <span class="cg-screen-tip">Water the east beds this evening.</span>
+                        </span></span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {c.placeholder && (
+                <figure class="cg-pc cg-ph" style={`${pos(c.placeholder.desk, c.placeholder.phone)};--ar:0.8;--depth:${c.placeholder.depth};--z:${c.placeholder.z};--ax:0.5;--ay:0.5`}>
+                  <span class="cg-ph-photo" aria-hidden="true"></span>
+                  <figcaption>{c.placeholder.caption}</figcaption>
+                  <span class="cg-tape" aria-hidden="true"></span>
+                </figure>
+              )}
+
+              {e.kind === 'perch' ? (
+                <div class={`cg-perch${e.water ? ' is-water' : ''}`} data-perch
+                  data-x={e.desk.x} data-y={e.desk.y} data-w={e.desk.w}
+                  data-mx={e.phone.x} data-my={e.phone.y} data-mw={e.phone.w}
+                  data-depth={e.depth} data-facing={e.facing ?? 1}
+                  style={`${pos(e.desk, e.phone)};--ar:${stand.aspect};--peck:1.217;--depth:${e.depth};--z:${e.z};--facing:${e.facing ?? 1}`}>
+                  <div class="cg-perch-bird">
+                    <img class="cg-perch-stand" src={src(stand.files[1].file)} alt="" decoding="async" loading={ci < 2 ? 'eager' : 'lazy'} />
+                    <img class="cg-perch-peck" src={src(peck.files[1].file)} alt="" decoding="async" loading="lazy" />
+                    {e.water && <img class="cg-perch-refl" src={src(stand.files[0].file)} alt="" decoding="async" loading="lazy" />}
+                  </div>
+                  {e.water && <span class="cg-ripple" aria-hidden="true"></span>}
+                  {nextLabel && <button type="button" class="cg-perch-btn" data-follow aria-label={`Follow the egret to the next chapter: ${nextLabel}`}></button>}
+                  {ci === 0 && <span class="cg-hint" aria-hidden="true">Follow the egret <span>→</span></span>}
+                </div>
+              ) : (
+                <div class="cg-glide" data-glide
+                  data-x={e.desk.x} data-y={e.desk.y} data-w={e.desk.w}
+                  data-mx={e.phone.x} data-my={e.phone.y} data-mw={e.phone.w}
+                  data-depth={e.depth}
+                  style={`${pos(e.desk, e.phone)};--ar:${fly.aspect};--depth:${e.depth};--z:${e.z}`}>
+                  <img src={src(fly.files[0].file)} alt="" decoding="async" loading="lazy" />
+                </div>
+              )}
+
+              {c.price && (
+                <div class={`cg-price${c.price.phone ? '' : ' cg-desk-only'}`} style={`${pos(c.price.desk, c.price.phone)};--str:${c.price.desk.str};--mstr:${c.price.phone?.str ?? 0}`} aria-hidden="true">
+                  <div class="cg-price-swing">
+                    <div class="cg-price-card">
+                      <p class="cg-price-title">{c.price.title}</p>
+                      <p class="cg-price-figs">{c.price.was.map((w) => <s>{w}</s>)} <strong>{c.price.now}</strong></p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {c.notes.map((n) => (
+                <p class={`cg-note${n.phone ? '' : ' cg-desk-only'}`} style={pos(n.desk, n.phone)}>{n.text}</p>
+              ))}
+
+              {c.ways?.map((w) => (
+                <a class="cg-way" href={w.href} style={`${pos(w.desk, w.phone)};--str:${w.desk.str};--mstr:${w.phone.str}`}>
+                  <span class="cg-way-swing">
+                    <span class="cg-way-card">
+                      <span class="cg-way-kicker">{w.kicker}</span>
+                      <span class="cg-way-text">{w.text}</span>
+                      <span class="cg-way-go">{w.go} <span aria-hidden="true">→</span></span>
+                    </span>
+                  </span>
+                </a>
+              ))}
+            </div>
+
+            <div class="cg-scrim" aria-hidden="true"></div>
+            <div class={`cg-text${c.level === 1 ? ' cg-text--cover' : ''}`}>
+              {c.level === 1
+                ? <h1 id={`${c.id}-h`} class="cg-h1">{heading(c.heading).map((h) => (h.em ? <em>{h.part}</em> : h.part))}</h1>
+                : <h2 id={`${c.id}-h`} class="cg-h2">{heading(c.heading).map((h) => (h.em ? <em>{h.part}</em> : h.part))}</h2>}
+              {c.lead && <p class="cg-lead">{c.lead}</p>}
+              {c.link && <a class="cg-link" href={c.link.href}>{c.link.text} <span aria-hidden="true">→</span></a>}
+              {c.cue && <p class="cg-cue" aria-hidden="true">{c.cue} <span>→</span></p>}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+
+    <button type="button" class="cg-bird" data-bird hidden aria-label="Follow the egret to the next chapter: The land"
+      data-photo={src(fly.files[1].file)} data-mask={src('egret-fly-mask.png')}>
+      <canvas width="582" height="465"></canvas>
+    </button>
+    <div class="cg-grain" aria-hidden="true"></div>
+  </div>
+</div>
+
+<script>
+  import { startCollage } from '../../scripts/collage/collage';
+  startCollage();
+</script>

@@ -1,0 +1,649 @@
+{
+  "cover-ground": {
+    "aspect": 1.7768,
+    "files": [
+      {
+        "w": 960,
+        "file": "cover-ground-960.webp"
+      },
+      {
+        "w": 1672,
+        "file": "cover-ground-1672.webp"
+      }
+    ]
+  },
+  "seedling": {
+    "aspect": 0.9551,
+    "files": [
+      {
+        "w": 578,
+        "file": "seedling-560.webp"
+      },
+      {
+        "w": 957,
+        "file": "seedling-931.webp"
+      }
+    ]
+  },
+  "new-leaf": {
+    "aspect": 1.0607,
+    "files": [
+      {
+        "w": 168,
+        "file": "new-leaf-150.webp"
+      },
+      {
+        "w": 332,
+        "file": "new-leaf-300.webp"
+      }
+    ]
+  },
+  "soil-clods": {
+    "aspect": 3.6641,
+    "files": [
+      {
+        "w": 480,
+        "file": "soil-clods-480.webp"
+      },
+      {
+        "w": 960,
+        "file": "soil-clods-960.webp"
+      }
+    ]
+  },
+  "land-sky": {
+    "aspect": 2.1519,
+    "files": [
+      {
+        "w": 960,
+        "file": "land-sky-960.webp"
+      },
+      {
+        "w": 1672,
+        "file": "land-sky-1672.webp"
+      }
+    ]
+  },
+  "treeline": {
+    "aspect": 4.4057,
+    "files": [
+      {
+        "w": 1800,
+        "file": "treeline-1800.webp"
+      },
+      {
+        "w": 2172,
+        "file": "treeline-2172.webp"
+      }
+    ]
+  },
+  "fields": {
+    "aspect": 2.9129,
+    "files": [
+      {
+        "w": 1672,
+        "file": "fields-1672.webp"
+      }
+    ]
+  },
+  "bund": {
+    "aspect": 3.1207,
+    "files": [
+      {
+        "w": 1250,
+        "file": "bund-1250.webp"
+      },
+      {
+        "w": 2172,
+        "file": "bund-2172.webp"
+      }
+    ]
+  },
+  "pump-house": {
+    "aspect": 1.6268,
+    "files": [
+      {
+        "w": 170,
+        "file": "pump-house-170.webp"
+      },
+      {
+        "w": 340,
+        "file": "pump-house-340.webp"
+      }
+    ]
+  },
+  "palm-a": {
+    "aspect": 0.6483,
+    "files": [
+      {
+        "w": 330,
+        "file": "palm-a-330.webp"
+      },
+      {
+        "w": 660,
+        "file": "palm-a-660.webp"
+      }
+    ]
+  },
+  "palm-b": {
+    "aspect": 0.4988,
+    "files": [
+      {
+        "w": 200,
+        "file": "palm-b-200.webp"
+      },
+      {
+        "w": 400,
+        "file": "palm-b-400.webp"
+      }
+    ]
+  },
+  "rice-water": {
+    "aspect": 3,
+    "files": [
+      {
+        "w": 1760,
+        "file": "rice-water-1760.webp"
+      },
+      {
+        "w": 2172,
+        "file": "rice-water-2172.webp"
+      }
+    ]
+  },
+  "turned-soil": {
+    "aspect": 3.0508,
+    "files": [
+      {
+        "w": 540,
+        "file": "turned-soil-540.webp"
+      },
+      {
+        "w": 1080,
+        "file": "turned-soil-1080.webp"
+      }
+    ]
+  },
+  "seedling-bundles": {
+    "aspect": 1.4254,
+    "files": [
+      {
+        "w": 518,
+        "file": "seedling-bundles-500.webp"
+      },
+      {
+        "w": 1032,
+        "file": "seedling-bundles-1000.webp"
+      }
+    ]
+  },
+  "rice-leaves": {
+    "aspect": 1.499,
+    "files": [
+      {
+        "w": 380,
+        "file": "rice-leaves-380.webp"
+      },
+      {
+        "w": 760,
+        "file": "rice-leaves-760.webp"
+      }
+    ]
+  },
+  "pot-and-tiffin": {
+    "aspect": 1.4305,
+    "files": [
+      {
+        "w": 218,
+        "file": "pot-and-tiffin-200.webp"
+      },
+      {
+        "w": 432,
+        "file": "pot-and-tiffin-400.webp"
+      }
+    ]
+  },
+  "slippers": {
+    "aspect": 0.8608,
+    "files": [
+      {
+        "w": 138,
+        "file": "slippers-120.webp"
+      },
+      {
+        "w": 272,
+        "file": "slippers-240.webp"
+      }
+    ]
+  },
+  "spare-mammoty": {
+    "aspect": 2.422,
+    "files": [
+      {
+        "w": 398,
+        "file": "spare-mammoty-380.webp"
+      },
+      {
+        "w": 792,
+        "file": "spare-mammoty-760.webp"
+      }
+    ]
+  },
+  "photo-print": {
+    "aspect": 1,
+    "files": [
+      {
+        "w": 290,
+        "file": "photo-print-290.webp"
+      },
+      {
+        "w": 580,
+        "file": "photo-print-580.webp"
+      }
+    ]
+  },
+  "rice-stalk": {
+    "aspect": 1.2593,
+    "files": [
+      {
+        "w": 170,
+        "file": "rice-stalk-170.webp"
+      },
+      {
+        "w": 340,
+        "file": "rice-stalk-340.webp"
+      }
+    ]
+  },
+  "egret-fly": {
+    "aspect": 1.7895,
+    "files": [
+      {
+        "w": 340,
+        "file": "egret-fly-340.webp"
+      },
+      {
+        "w": 680,
+        "file": "egret-fly-680.webp"
+      }
+    ]
+  },
+  "egret-stand": {
+    "aspect": 0.8791,
+    "files": [
+      {
+        "w": 160,
+        "file": "egret-stand-160.webp"
+      },
+      {
+        "w": 320,
+        "file": "egret-stand-320.webp"
+      }
+    ]
+  },
+  "egret-peck": {
+    "aspect": 2,
+    "files": [
+      {
+        "w": 200,
+        "file": "egret-peck-200.webp"
+      },
+      {
+        "w": 400,
+        "file": "egret-peck-400.webp"
+      }
+    ]
+  },
+  "storm": {
+    "aspect": 1.7768,
+    "files": [
+      {
+        "w": 960,
+        "file": "storm-960.webp"
+      },
+      {
+        "w": 1672,
+        "file": "storm-1672.webp"
+      }
+    ]
+  },
+  "cracked-soil": {
+    "aspect": 2.1348,
+    "files": [
+      {
+        "w": 778,
+        "file": "cracked-soil-760.webp"
+      },
+      {
+        "w": 1552,
+        "file": "cracked-soil-1520.webp"
+      }
+    ]
+  },
+  "bitten-leaf": {
+    "aspect": 1.9525,
+    "files": [
+      {
+        "w": 578,
+        "file": "bitten-leaf-560.webp"
+      },
+      {
+        "w": 1152,
+        "file": "bitten-leaf-1120.webp"
+      }
+    ]
+  },
+  "caterpillar": {
+    "aspect": 2.9545,
+    "files": [
+      {
+        "w": 130,
+        "file": "caterpillar-130.webp"
+      },
+      {
+        "w": 260,
+        "file": "caterpillar-260.webp"
+      }
+    ]
+  },
+  "aerial-paddy": {
+    "aspect": 1.7768,
+    "files": [
+      {
+        "w": 960,
+        "file": "aerial-paddy-960.webp"
+      },
+      {
+        "w": 1672,
+        "file": "aerial-paddy-1672.webp"
+      }
+    ]
+  },
+  "drone": {
+    "aspect": 1.6877,
+    "files": [
+      {
+        "w": 618,
+        "file": "drone-600.webp"
+      },
+      {
+        "w": 1232,
+        "file": "drone-1200.webp"
+      }
+    ]
+  },
+  "soil-sensor": {
+    "aspect": 0.4819,
+    "files": [
+      {
+        "w": 188,
+        "file": "soil-sensor-170.webp"
+      },
+      {
+        "w": 372,
+        "file": "soil-sensor-340.webp"
+      }
+    ]
+  },
+  "phone": {
+    "aspect": 0.4623,
+    "files": [
+      {
+        "w": 198,
+        "file": "phone-180.webp"
+      },
+      {
+        "w": 392,
+        "file": "phone-360.webp"
+      }
+    ]
+  },
+  "polyhouse": {
+    "aspect": 2.3978,
+    "files": [
+      {
+        "w": 448,
+        "file": "polyhouse-430.webp"
+      },
+      {
+        "w": 892,
+        "file": "polyhouse-860.webp"
+      }
+    ]
+  },
+  "drip-line": {
+    "aspect": 3.2,
+    "files": [
+      {
+        "w": 538,
+        "file": "drip-line-520.webp"
+      },
+      {
+        "w": 1072,
+        "file": "drip-line-1040.webp"
+      }
+    ]
+  },
+  "together-bank": {
+    "aspect": 1.7768,
+    "files": [
+      {
+        "w": 960,
+        "file": "together-bank-960.webp"
+      },
+      {
+        "w": 1672,
+        "file": "together-bank-1672.webp"
+      }
+    ]
+  },
+  "tea": {
+    "aspect": 1.5727,
+    "files": [
+      {
+        "w": 348,
+        "file": "tea-330.webp"
+      },
+      {
+        "w": 692,
+        "file": "tea-660.webp"
+      }
+    ]
+  },
+  "notebook": {
+    "aspect": 1.3822,
+    "files": [
+      {
+        "w": 398,
+        "file": "notebook-380.webp"
+      },
+      {
+        "w": 792,
+        "file": "notebook-760.webp"
+      }
+    ]
+  },
+  "grows-table": {
+    "aspect": 1.7768,
+    "files": [
+      {
+        "w": 960,
+        "file": "grows-table-960.webp"
+      },
+      {
+        "w": 1672,
+        "file": "grows-table-1672.webp"
+      }
+    ]
+  },
+  "lettuce": {
+    "aspect": 1.4297,
+    "files": [
+      {
+        "w": 378,
+        "file": "lettuce-360.webp"
+      },
+      {
+        "w": 752,
+        "file": "lettuce-720.webp"
+      }
+    ]
+  },
+  "kale": {
+    "aspect": 1.4071,
+    "files": [
+      {
+        "w": 358,
+        "file": "kale-340.webp"
+      },
+      {
+        "w": 712,
+        "file": "kale-680.webp"
+      }
+    ]
+  },
+  "cucumbers": {
+    "aspect": 1.3913,
+    "files": [
+      {
+        "w": 338,
+        "file": "cucumbers-320.webp"
+      },
+      {
+        "w": 672,
+        "file": "cucumbers-640.webp"
+      }
+    ]
+  },
+  "crate": {
+    "aspect": 1.5447,
+    "files": [
+      {
+        "w": 538,
+        "file": "crate-520.webp"
+      },
+      {
+        "w": 1072,
+        "file": "crate-1040.webp"
+      }
+    ]
+  },
+  "crate-front": {
+    "aspect": 1.5447,
+    "files": [
+      {
+        "w": 538,
+        "file": "crate-front-520.webp"
+      },
+      {
+        "w": 1072,
+        "file": "crate-front-1040.webp"
+      }
+    ]
+  },
+  "seed-packet": {
+    "aspect": 0.7799,
+    "files": [
+      {
+        "w": 188,
+        "file": "seed-packet-170.webp"
+      },
+      {
+        "w": 372,
+        "file": "seed-packet-340.webp"
+      }
+    ]
+  },
+  "lettuce-leaf": {
+    "aspect": 1.3496,
+    "files": [
+      {
+        "w": 278,
+        "file": "lettuce-leaf-260.webp"
+      },
+      {
+        "w": 552,
+        "file": "lettuce-leaf-520.webp"
+      }
+    ]
+  },
+  "plate-lane": {
+    "aspect": 1.7768,
+    "files": [
+      {
+        "w": 960,
+        "file": "plate-lane-960.webp"
+      },
+      {
+        "w": 1672,
+        "file": "plate-lane-1672.webp"
+      }
+    ]
+  },
+  "goods-auto": {
+    "aspect": 1.6899,
+    "files": [
+      {
+        "w": 438,
+        "file": "goods-auto-420.webp"
+      },
+      {
+        "w": 872,
+        "file": "goods-auto-840.webp"
+      }
+    ],
+    "wheels": [
+      {
+        "file": "goods-auto-wheel-1.webp",
+        "x": 0.22,
+        "y": 0.8294923076923076,
+        "d": 0.10164383561643836
+      },
+      {
+        "file": "goods-auto-wheel-2.webp",
+        "x": 0.8969863013698631,
+        "y": 0.8369384615384615,
+        "d": 0.09972602739726028
+      }
+    ]
+  },
+  "shop": {
+    "aspect": 1.4333,
+    "files": [
+      {
+        "w": 518,
+        "file": "shop-500.webp"
+      },
+      {
+        "w": 1032,
+        "file": "shop-1000.webp"
+      }
+    ]
+  },
+  "plate-salad": {
+    "aspect": 1.2011,
+    "files": [
+      {
+        "w": 438,
+        "file": "plate-salad-420.webp"
+      },
+      {
+        "w": 872,
+        "file": "plate-salad-840.webp"
+      }
+    ]
+  },
+  "closing-fields": {
+    "aspect": 1.5,
+    "files": [
+      {
+        "w": 960,
+        "file": "closing-fields-960.webp"
+      },
+      {
+        "w": 1536,
+        "file": "closing-fields-1536.webp"
+      }
+    ]
+  }
+}
