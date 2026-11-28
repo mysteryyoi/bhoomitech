@@ -1,0 +1,94 @@
+---
+// The wheel: Our Produce as one fixed screen, after Agrumea Farm's home page. The packs ride a tilted belt
+// over a dark disc whose ring of words turns with them. Scroll, drag, swipe or use the arrow keys to turn
+// it; it settles with one pack in front, which opens (its vegetable pops out) and is named bottom left.
+// The pack in front is big and sharp; the ones further out shrink, darken and blur (scripts/produce/orbit).
+// Three crops, each pack seen from the front and turned both ways: nine on the belt.
+// Without JavaScript it's the title and the three packs standing in a row, each a link.
+import SplitTitle from './SplitTitle.astro';
+import { crops, pic, producePath, rangePath } from '../../data/produce';
+
+type View = 'front' | 'left' | 'right';
+const order: [string, View][] = [
+  ['lettuce', 'front'], ['kale', 'right'], ['cucumber', 'left'],
+  ['lettuce', 'left'], ['kale', 'front'], ['cucumber', 'right'],
+  ['lettuce', 'right'], ['kale', 'left'], ['cucumber', 'front'],
+];
+const items = order.map(([slug, view]) => {
+  const crop = crops.find((c) => c.slug === slug)!;
+  return { crop, view, p: pic(`${crop.slug}-${view}`) };
+});
+const ring = 'Grown by us · Packed by us · Sold near you · '.repeat(2);
+// What pops up out of each pack when it opens.
+const pops = { lettuce: pic('pop-lettuce'), kale: pic('pop-kale'), cucumber: pic('piece-cucumber-a') };
+const count = (i: number) => `${String(i + 1).padStart(2, '0')} / ${String(crops.length).padStart(2, '0')}`;
+---
+<section class="pd-orbit" aria-labelledby="produce-h" data-orbit>
+  <div class="pd-orbit-disc" aria-hidden="true">
+    <svg viewBox="0 0 1000 1000">
+      <defs>
+        <path id="pd-ring-path" d="M500,500 m-388,0 a388,388 0 1,1 776,0 a388,388 0 1,1 -776,0" />
+      </defs>
+      <circle cx="500" cy="500" r="500" class="pd-orbit-disc-fill" />
+      <circle cx="500" cy="500" r="452" class="pd-orbit-disc-line" />
+      <circle cx="500" cy="500" r="330" class="pd-orbit-disc-line" />
+      <g class="pd-orbit-ring" data-orbit-ring>
+        <text><textPath href="#pd-ring-path" textLength="2425" lengthAdjust="spacing">{ring}</textPath></text>
+      </g>
+    </svg>
+  </div>
+
+  <SplitTitle text="Our produce" level={1} id="produce-h" class="pd-title-xl pd-orbit-title" />
+
+  <div class="pd-orbit-items" data-orbit-stage>
+    {items.map(({ crop, view, p }) => {
+      const main = view === 'front';
+      return (
+        <a
+          class={`pd-orbit-item pd-orbit-item--${crop.slug}${main ? '' : ' pd-orbit-item--extra'}`}
+          href={producePath(crop.slug)}
+          style={`--ar:${p.aspect}`}
+          data-orbit-item
+          data-crop={crop.slug}
+          data-cursor={`See the ${crop.name.toLowerCase()}`}
+          draggable="false"
+          aria-label={main ? `${crop.name}: ${crop.variety.toLowerCase()} in a ${crop.packShort.toLowerCase()}` : undefined}
+          aria-hidden={main ? undefined : 'true'}
+          tabindex={main ? undefined : -1}
+        >
+          <span class="pd-pop" aria-hidden="true">
+            {crop.slug === 'cucumber' ? (
+              [0, 1, 2].map((k) => <img class={`pd-pop-s pd-pop-s${k}`} src={pops.cucumber.src} alt="" width="280" height={Math.round(280 / pops.cucumber.aspect)} loading="lazy" decoding="async" draggable="false" />)
+            ) : (
+              <img class="pd-pop-a" src={pops[crop.slug as 'lettuce' | 'kale'].src} srcset={pops[crop.slug as 'lettuce' | 'kale'].srcset} sizes="(max-width: 760px) 50vw, 24vw" alt="" width="640" height={Math.round(640 / pops[crop.slug as 'lettuce' | 'kale'].aspect)} loading="lazy" decoding="async" draggable="false" />
+            )}
+          </span>
+          <img class="pd-orbit-pack" src={p.src} srcset={p.srcset} sizes="(max-width: 760px) 70vw, 34vw" alt="" width="520" height={Math.round(520 / p.aspect)} fetchpriority={main ? 'high' : undefined} decoding="async" draggable="false" />
+        </a>
+      );
+    })}
+  </div>
+
+  <div class="pd-orbit-cap" data-orbit-caps>
+    {crops.map((c, i) => (
+      <div class="pd-orbit-cap-item" data-cap={c.slug}>
+        <p class="pd-count">{count(i)}</p>
+        <p class="pd-orbit-cap-name">{c.name}</p>
+        <p class="pd-orbit-cap-sub">{c.variety} · {c.packShort}</p>
+        <a class="pd-orbit-cap-link" href={producePath(c.slug)}>Meet the {c.name.toLowerCase()}<span aria-hidden="true"> →</span></a>
+      </div>
+    ))}
+  </div>
+  <p class="pd-sr" aria-live="polite" data-orbit-live></p>
+
+  <div class="pd-orbit-side">
+    <div class="pd-orbit-dots" role="group" aria-label="Turn the wheel to">
+      {crops.map((c) => (
+        <button type="button" class="pd-orbit-dot" data-dot={c.slug} aria-label={c.name} style={`--tint:${c.tint};--deep:${c.deep}`}></button>
+      ))}
+    </div>
+    <a class="pd-btn pd-btn--quiet pd-orbit-range" href={rangePath()}>See the whole range<span aria-hidden="true"> →</span></a>
+  </div>
+
+  <p class="pd-orbit-prompt" aria-hidden="true">Scroll or drag to turn</p>
+</section>

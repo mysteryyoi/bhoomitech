@@ -1,0 +1,86 @@
+---
+// The frame around the produce pages: head, top bar, footer, the preview note and the cursor label.
+// `fixed` is for the wheel: one screen that doesn't scroll, so no footer, just a small note in the corner.
+// Preview only: not linked from the live site, not indexed, fonts from Google Fonts for now.
+import '../../styles/layers.css';
+import '../../styles/tokens.css';
+import '../../styles/produce.css';
+import { producePath, rangePath } from '../../data/produce';
+
+interface Props {
+  title: string;
+  description: string;
+  fixed?: boolean;
+}
+const { title, description, fixed = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const here = Astro.url.pathname;
+const note = 'The packs, the vegetables and the kitchen photos are generated concept pictures, standing in until the real packs are photographed. The words are drafts to check. “To be confirmed” marks facts we don’t have yet. Where to buy isn’t built yet.';
+---
+<!doctype html>
+<html lang="en" class="pd-html">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f6f1e6">
+  <meta name="description" content={description}>
+  <title>{title}</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,400&family=Geist:wght@400;500&family=Geist+Mono:wght@500&display=swap">
+  <script is:inline>
+    // Reveals wait for the page script. If it never starts, show everything rather than leave it hidden.
+    document.documentElement.classList.add('pd-js');
+    setTimeout(function () { if (!window.__pdStarted) document.documentElement.classList.remove('pd-js'); }, 4000);
+  </script>
+</head>
+<body class={`pd-body${fixed ? ' pd-body--fixed' : ''}`}>
+  <a class="pd-skip" href="#main">Skip to content</a>
+  <header class="pd-top">
+    <a class="pd-word" href={`${base}/preview/collage/`}>Bhoomi Tech</a>
+    <nav class="pd-nav" aria-label="Main">
+      <a href={producePath()} aria-current={here === producePath() ? 'page' : undefined}>Our produce</a>
+      <a href={rangePath()} aria-current={here === rangePath() ? 'page' : undefined}>The range</a>
+      <a class="pd-pill" href={`${base}/where-to-buy/`}>Where to buy</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  {fixed ? (
+    <aside class="pd-corner-note" aria-label="About this preview">
+      <details>
+        <summary>Preview</summary>
+        <p>{note}</p>
+      </details>
+    </aside>
+  ) : (
+    <footer class="pd-foot">
+      <p class="pd-foot-word" aria-hidden="true">Bhoomi <em>Tech</em></p>
+      <div class="pd-foot-row">
+        <p class="pd-foot-line">Seed to fork. Grown by us, packed by us, sold by shops near you.</p>
+        <nav class="pd-foot-nav" aria-label="Footer">
+          <a href={`${base}/preview/collage/`}>Home</a>
+          <a href={producePath()}>Our produce</a>
+          <a href={rangePath()}>The range</a>
+          <a href={`${base}/where-to-buy/`}>Where to buy</a>
+        </nav>
+      </div>
+      <aside class="pd-note" aria-label="About this preview">
+        <p><strong>Preview.</strong> {note}</p>
+      </aside>
+    </footer>
+  )}
+
+  <div class="pd-cursor" aria-hidden="true" data-cursor-label><span class="pd-cursor-dot"></span><span data-cursor-text></span></div>
+
+  <script>
+    import { startProduce } from '../../scripts/produce/produce';
+    startProduce();
+  </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+---
+// One vegetable's page, after Agrumea Farm's product pages: the name set huge, the pack turning and
+// tilting as you scroll, the facts, a strip of photos, and the other vegetables.
+import ProduceShell from '../../../components/produce/ProduceShell.astro';
+import SplitTitle from '../../../components/produce/SplitTitle.astro';
+import PackCard from '../../../components/produce/PackCard.astro';
+import { crops, pic, rangePath, type Crop } from '../../../data/produce';
+
+export function getStaticPaths() {
+  return crops.map((crop) => ({ params: { slug: crop.slug }, props: { crop } }));
+}
+
+const { crop } = Astro.props as { crop: Crop };
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const front = pic(`${crop.slug}-front`);
+const turned = pic(`${crop.slug}-right`);
+const others = crops.filter((c) => c.slug !== crop.slug);
+const name = crop.name.toLowerCase();
+
+const facts: { label: string; value: string | null; chips?: string[] }[] = [
+  { label: 'How to keep it', value: crop.keep },
+  { label: 'Good with', value: null, chips: crop.goodWith },
+  { label: 'Pack size', value: crop.size },
+  { label: 'How long it keeps', value: crop.keeps },
+  { label: 'How it’s grown', value: crop.grown },
+];
+
+// The label and the back are shown whole on their own background; the table photos fill the frame.
+const photos = [
+  { id: `${crop.slug}-table` as const, alt: `The ${name} pack on a kitchen table`, whole: false },
+  { id: `${crop.slug}-label` as const, alt: `A close-up of the ${name} label`, whole: true },
+  { id: `${crop.slug}-studio-back` as const, alt: `The back of the ${name} pack, with room for the pack details`, whole: true },
+  { id: 'range' as const, alt: 'All three Bhoomi Tech packs together on a kitchen table', whole: false },
+];
+---
+<ProduceShell title={`${crop.name} | Bhoomi Tech (preview)`} description={`${crop.name} from Bhoomi Tech: ${crop.lead}`}>
+  <section class={`pd-pdp pd-pdp--${crop.slug}`} style={`--tint:${crop.tint};--deep:${crop.deep}`} aria-labelledby="pdp-h" data-pdp>
+    <p class="pd-back"><a href={rangePath()}><span aria-hidden="true">← </span>The range</a></p>
+    <p class="pd-kicker">Fresh produce</p>
+    <SplitTitle text={crop.name} level={1} id="pdp-h" class="pd-title-xl" />
+    <div class="pd-pdp-stage" aria-hidden="true">
+      <div class="pd-pdp-pack" style={`--ar:${front.aspect}`}>
+        <img class="pd-pdp-front" src={front.src} srcset={front.srcset} sizes="(max-width: 760px) 80vw, 46vw" alt="" width="1040" height={Math.round(1040 / front.aspect)} fetchpriority="high" />
+        <img class="pd-pdp-turned" src={turned.src} srcset={turned.srcset} sizes="(max-width: 760px) 80vw, 46vw" alt="" width="1040" height={Math.round(1040 / turned.aspect)} loading="lazy" decoding="async" />
+      </div>
+    </div>
+    <p class="pd-sr">{`The ${name} pack: ${crop.variety.toLowerCase()} in a ${crop.packShort.toLowerCase()}.`}</p>
+
+    <div class="pd-intro pd-intro--pdp pd-rise" data-reveal>
+      <span class="pd-diamond" aria-hidden="true"></span>
+      <p class="pd-lead">{crop.lead}</p>
+      <p>{crop.packNote}</p>
+      <span class="pd-diamond" aria-hidden="true"></span>
+    </div>
+
+    <dl class="pd-facts">
+      {facts.map((f) => (
+        <div class="pd-fact pd-rise" data-reveal>
+          <dt class="pd-label">{f.label}</dt>
+          <dd>
+            {f.chips ? (
+              <ul class="pd-chips">{f.chips.map((c) => <li>{c}</li>)}</ul>
+            ) : f.value ? (
+              f.value
+            ) : (
+              <span class="pd-tbc">To be confirmed</span>
+            )}
+          </dd>
+        </div>
+      ))}
+    </dl>
+
+    <p class="pd-actions pd-actions--center pd-rise" data-reveal>
+      <a class="pd-btn" href={`${base}/where-to-buy/`}>Find {name} near you</a>
+    </p>
+  </section>
+
+  <section class="pd-strip" aria-label={`Photos of the ${name} pack`} data-strip>
+    <div class="pd-strip-track" tabindex="0" data-strip-track>
+      {photos.map((p) => {
+        const ph = pic(p.id);
+        return (
+          <figure class={`pd-strip-slide${p.whole ? ' pd-strip-slide--contain' : ''}`} style={ph.bg ? `--bg:${ph.bg}` : undefined}>
+            <img src={ph.src} srcset={ph.srcset} sizes="(max-width: 760px) 86vw, 64vw" alt={p.alt} width={Math.round(1000 * ph.aspect)} height="1000" loading="lazy" decoding="async" />
+          </figure>
+        );
+      })}
+    </div>
+    <div class="pd-strip-nav">
+      <button type="button" class="pd-strip-btn" data-strip-prev aria-label="Previous photo">←</button>
+      <button type="button" class="pd-strip-btn" data-strip-next aria-label="Next photo">→</button>
+    </div>
+  </section>
+
+  <section class="pd-others" aria-labelledby="others-h">
+    <SplitTitle text="The other vegetables" id="others-h" class="pd-title-m" />
+    <div class="pd-shelf-row pd-shelf-row--two">
+      {others.map((c) => <PackCard crop={c} />)}
+    </div>
+  </section>
+</ProduceShell>

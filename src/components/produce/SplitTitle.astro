@@ -1,0 +1,24 @@
+---
+// A big title whose letters rise in one after another as it comes into view (scripts/produce).
+// Screen readers get the plain words; the letters are decoration.
+interface Props {
+  text: string;
+  level?: 1 | 2;
+  class?: string;
+  id?: string;
+}
+const { text, level = 2, class: cls = '', id } = Astro.props;
+const Tag = level === 1 ? 'h1' : 'h2';
+const words = text.split(' ');
+let i = 0;
+---
+<Tag class={`pd-split ${cls}`} id={id} data-reveal>
+  <span class="pd-sr">{text}</span>
+  <span class="pd-split-in" aria-hidden="true">
+    {words.map((w) => (
+      <span class="pd-sw">
+        {[...w].map((ch) => <span class="pd-ch" style={`--i:${i++}`}>{ch}</span>)}
+      </span>
+    ))}
+  </span>
+</Tag>

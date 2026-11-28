@@ -1,0 +1,33 @@
+---
+// One vegetable's pack on a tinted card. Pointing at it tilts the pack and drops pieces of the crop in
+// behind it (scripts/produce/tumble). On touch screens the pieces fall once as the card comes into view.
+// Without JavaScript it's a plain link with the pack on it.
+import { pic, producePath, type Crop } from '../../data/produce';
+
+interface Props {
+  crop: Crop;
+  /** Heading level for the name under the card. */
+  level?: 2 | 3;
+  sizes?: string;
+}
+const { crop, level = 3, sizes = '(max-width: 760px) 64vw, 26vw' } = Astro.props;
+const front = pic(`${crop.slug}-front`);
+const Tag = level === 2 ? 'h2' : 'h3';
+---
+<article class={`pd-card pd-card--${crop.slug}`} style={`--tint:${crop.tint};--deep:${crop.deep}`} data-card data-cursor={`See the ${crop.name.toLowerCase()}`}>
+  <a class="pd-card-link" href={producePath(crop.slug)}>
+    <div class="pd-card-stage">
+      <div class="pd-card-pile" aria-hidden="true">
+        {crop.pieces.map((p) => {
+          const pp = pic(p.img);
+          return <img class="pd-piece" src={pp.src} alt="" width="280" height={Math.round(280 / pp.aspect)} loading="lazy" decoding="async" data-w={p.w} data-aspect={pp.aspect} />;
+        })}
+      </div>
+      <img class="pd-card-pack" src={front.src} srcset={front.srcset} sizes={sizes} alt={`The ${crop.name.toLowerCase()} pack: ${crop.variety.toLowerCase()} in a ${crop.packShort.toLowerCase()}`} width="520" height={Math.round(520 / front.aspect)} loading="lazy" decoding="async" style={`--ar:${front.aspect}`} />
+    </div>
+    <div class="pd-card-cap">
+      <Tag class="pd-card-name">{crop.name}</Tag>
+      <p class="pd-card-sub">{crop.variety} · {crop.packShort}</p>
+    </div>
+  </a>
+</article>

@@ -1,0 +1,71 @@
+---
+// The range, after Agrumea Farm's Pantry: a big title over the photo of all three packs, the packs on a
+// shelf of tinted cards (point at one and pieces of the crop tumble in), then one section per vegetable.
+// A row of crop names stays at the bottom of the screen.
+import ProduceShell from '../../../../components/produce/ProduceShell.astro';
+import SplitTitle from '../../../../components/produce/SplitTitle.astro';
+import PackCard from '../../../../components/produce/PackCard.astro';
+import { crops, pic, producePath } from '../../../../data/produce';
+
+const range = pic('range');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<ProduceShell title="The range | Bhoomi Tech (preview)" description="Every Bhoomi Tech pack: lettuce, kale and cucumber.">
+  <section class="pd-hero pd-hero--top" aria-labelledby="range-h" data-hero-end>
+    <SplitTitle text="The range" level={1} id="range-h" class="pd-title-xl" />
+    <figure class="pd-hero-photo pd-rise" data-reveal>
+      <img src={range.src} srcset={range.srcset} sizes="(max-width: 760px) 100vw, 94vw" alt="The lettuce punnet, the kale pouch and the pair of cucumbers in their Bhoomi Tech packs on a kitchen table" width="1600" height="900" fetchpriority="high" />
+    </figure>
+  </section>
+
+  <div class="pd-intro pd-rise" data-reveal>
+    <span class="pd-diamond" aria-hidden="true"></span>
+    <p>Lettuce, kale and cucumber, grown on our farm and packed in our own packs. Each pack carries our name, so you always know where your vegetables came from. More crops are on the way.</p>
+    <span class="pd-diamond" aria-hidden="true"></span>
+  </div>
+
+  <section class="pd-shelf" aria-labelledby="shelf-h">
+    <h2 class="pd-eyebrow" id="shelf-h">Every pack</h2>
+    <div class="pd-shelf-row">
+      {crops.map((c) => <PackCard crop={c} />)}
+    </div>
+  </section>
+
+  {crops.map((c, i) => {
+    const photo = pic(`${c.slug}-table`);
+    return (
+      <section class={`pd-crop pd-crop--${c.slug}`} id={c.slug} aria-labelledby={`${c.slug}-h`} style={`--tint:${c.tint};--deep:${c.deep}`} data-section={c.slug}>
+        <p class="pd-count" aria-hidden="true">{String(i + 1).padStart(2, '0')} / {String(crops.length).padStart(2, '0')}</p>
+        <SplitTitle text={c.name} id={`${c.slug}-h`} class="pd-title-l" />
+        <figure class="pd-crop-photo pd-rise" data-reveal>
+          <img src={photo.src} srcset={photo.srcset} sizes="(max-width: 760px) 100vw, 88vw" alt={`The ${c.name.toLowerCase()} pack on a kitchen table`} width="1672" height="941" loading="lazy" decoding="async" />
+        </figure>
+        <div class="pd-crop-text pd-rise" data-reveal>
+          <p class="pd-lead">{c.lead}</p>
+          <p>{c.packNote}</p>
+          <div class="pd-chips-block">
+            <p class="pd-label">The pack</p>
+            <ul class="pd-chips">
+              <li>{c.variety}</li>
+              <li>{c.packShort}</li>
+            </ul>
+          </div>
+          <p class="pd-actions">
+            <a class="pd-btn" href={producePath(c.slug)}>Meet the {c.name.toLowerCase()}<span aria-hidden="true"> →</span></a>
+            <a class="pd-btn pd-btn--quiet" href={`${base}/where-to-buy/`}>Where to buy</a>
+          </p>
+        </div>
+      </section>
+    );
+  })}
+
+  <section class="pd-buy" aria-labelledby="buy-h">
+    <h2 id="buy-h">Find our packs at shops near you.</h2>
+    <p>We don’t sell on this site. Our vegetables are sold by shops and online stores we work with.</p>
+    <a class="pd-btn pd-btn--light" href={`${base}/where-to-buy/`}>Where to buy</a>
+  </section>
+
+  <nav class="pd-rail" aria-label="Vegetables" data-rail>
+    {crops.map((c) => <a href={`#${c.slug}`} data-rail-link={c.slug}>{c.name}</a>)}
+  </nav>
+</ProduceShell>

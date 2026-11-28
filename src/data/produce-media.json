@@ -1,0 +1,357 @@
+{
+  "lettuce-front": {
+    "aspect": 1.8519,
+    "files": [
+      {
+        "w": 520,
+        "file": "lettuce-front-520.webp"
+      },
+      {
+        "w": 1040,
+        "file": "lettuce-front-1040.webp"
+      }
+    ]
+  },
+  "lettuce-left": {
+    "aspect": 1.6488,
+    "files": [
+      {
+        "w": 520,
+        "file": "lettuce-left-520.webp"
+      },
+      {
+        "w": 1040,
+        "file": "lettuce-left-1040.webp"
+      }
+    ]
+  },
+  "lettuce-right": {
+    "aspect": 1.6149,
+    "files": [
+      {
+        "w": 520,
+        "file": "lettuce-right-520.webp"
+      },
+      {
+        "w": 1040,
+        "file": "lettuce-right-1040.webp"
+      }
+    ]
+  },
+  "lettuce-back": {
+    "aspect": 1.8262,
+    "files": [
+      {
+        "w": 520,
+        "file": "lettuce-back-520.webp"
+      },
+      {
+        "w": 1040,
+        "file": "lettuce-back-1040.webp"
+      }
+    ]
+  },
+  "lettuce-label": {
+    "aspect": 3.7407,
+    "files": [
+      {
+        "w": 720,
+        "file": "lettuce-label-720.webp"
+      },
+      {
+        "w": 1313,
+        "file": "lettuce-label-1313.webp"
+      }
+    ],
+    "bg": "#d8c5a9"
+  },
+  "lettuce-studio-back": {
+    "aspect": 1.1,
+    "files": [
+      {
+        "w": 640,
+        "file": "lettuce-studio-back-640.webp"
+      },
+      {
+        "w": 1100,
+        "file": "lettuce-studio-back-1100.webp"
+      }
+    ],
+    "bg": "#dbd3b8"
+  },
+  "kale-front": {
+    "aspect": 0.6401,
+    "files": [
+      {
+        "w": 520,
+        "file": "kale-front-520.webp"
+      },
+      {
+        "w": 907,
+        "file": "kale-front-907.webp"
+      }
+    ]
+  },
+  "kale-left": {
+    "aspect": 0.623,
+    "files": [
+      {
+        "w": 520,
+        "file": "kale-left-520.webp"
+      },
+      {
+        "w": 894,
+        "file": "kale-left-894.webp"
+      }
+    ]
+  },
+  "kale-right": {
+    "aspect": 0.6008,
+    "files": [
+      {
+        "w": 520,
+        "file": "kale-right-520.webp"
+      },
+      {
+        "w": 855,
+        "file": "kale-right-855.webp"
+      }
+    ]
+  },
+  "kale-back": {
+    "aspect": 0.6436,
+    "files": [
+      {
+        "w": 520,
+        "file": "kale-back-520.webp"
+      },
+      {
+        "w": 912,
+        "file": "kale-back-912.webp"
+      }
+    ]
+  },
+  "kale-label": {
+    "aspect": 1.2222,
+    "files": [
+      {
+        "w": 720,
+        "file": "kale-label-720.webp"
+      },
+      {
+        "w": 814,
+        "file": "kale-label-814.webp"
+      }
+    ],
+    "bg": "#dac7ab"
+  },
+  "kale-studio-back": {
+    "aspect": 1.1,
+    "files": [
+      {
+        "w": 640,
+        "file": "kale-studio-back-640.webp"
+      },
+      {
+        "w": 1100,
+        "file": "kale-studio-back-1100.webp"
+      }
+    ],
+    "bg": "#e5d3bd"
+  },
+  "cucumber-front": {
+    "aspect": 0.5202,
+    "files": [
+      {
+        "w": 520,
+        "file": "cucumber-front-520.webp"
+      },
+      {
+        "w": 747,
+        "file": "cucumber-front-747.webp"
+      }
+    ]
+  },
+  "cucumber-left": {
+    "aspect": 0.5024,
+    "files": [
+      {
+        "w": 520,
+        "file": "cucumber-left-520.webp"
+      },
+      {
+        "w": 728,
+        "file": "cucumber-left-728.webp"
+      }
+    ]
+  },
+  "cucumber-right": {
+    "aspect": 0.501,
+    "files": [
+      {
+        "w": 520,
+        "file": "cucumber-right-520.webp"
+      },
+      {
+        "w": 724,
+        "file": "cucumber-right-724.webp"
+      }
+    ]
+  },
+  "cucumber-back": {
+    "aspect": 0.5084,
+    "files": [
+      {
+        "w": 520,
+        "file": "cucumber-back-520.webp"
+      },
+      {
+        "w": 727,
+        "file": "cucumber-back-727.webp"
+      }
+    ]
+  },
+  "cucumber-label": {
+    "aspect": 1.1083,
+    "files": [
+      {
+        "w": 720,
+        "file": "cucumber-label-720.webp"
+      },
+      {
+        "w": 747,
+        "file": "cucumber-label-747.webp"
+      }
+    ],
+    "bg": "#b9a882"
+  },
+  "cucumber-studio-back": {
+    "aspect": 1.1,
+    "files": [
+      {
+        "w": 640,
+        "file": "cucumber-studio-back-640.webp"
+      },
+      {
+        "w": 1100,
+        "file": "cucumber-studio-back-1100.webp"
+      }
+    ],
+    "bg": "#d5d0b9"
+  },
+  "lettuce-table": {
+    "aspect": 1.7768,
+    "files": [
+      {
+        "w": 960,
+        "file": "lettuce-table-960.webp"
+      },
+      {
+        "w": 1672,
+        "file": "lettuce-table-1672.webp"
+      }
+    ]
+  },
+  "kale-table": {
+    "aspect": 1.7768,
+    "files": [
+      {
+        "w": 960,
+        "file": "kale-table-960.webp"
+      },
+      {
+        "w": 1672,
+        "file": "kale-table-1672.webp"
+      }
+    ]
+  },
+  "cucumber-table": {
+    "aspect": 1.7768,
+    "files": [
+      {
+        "w": 960,
+        "file": "cucumber-table-960.webp"
+      },
+      {
+        "w": 1672,
+        "file": "cucumber-table-1672.webp"
+      }
+    ]
+  },
+  "range": {
+    "aspect": 1.7778,
+    "files": [
+      {
+        "w": 960,
+        "file": "range-960.webp"
+      },
+      {
+        "w": 1600,
+        "file": "range-1600.webp"
+      }
+    ],
+    "bg": "#b69d77"
+  },
+  "piece-lettuce-a": {
+    "aspect": 1.3795,
+    "files": [
+      {
+        "w": 280,
+        "file": "piece-lettuce-a-280.webp"
+      }
+    ]
+  },
+  "piece-lettuce-b": {
+    "aspect": 1.0662,
+    "files": [
+      {
+        "w": 280,
+        "file": "piece-lettuce-b-280.webp"
+      }
+    ]
+  },
+  "piece-kale-a": {
+    "aspect": 1.4392,
+    "files": [
+      {
+        "w": 400,
+        "file": "piece-kale-a-400.webp"
+      }
+    ]
+  },
+  "piece-cucumber-a": {
+    "aspect": 0.9536,
+    "files": [
+      {
+        "w": 280,
+        "file": "piece-cucumber-a-280.webp"
+      }
+    ]
+  },
+  "pop-lettuce": {
+    "aspect": 1.4636,
+    "files": [
+      {
+        "w": 360,
+        "file": "pop-lettuce-360.webp"
+      },
+      {
+        "w": 640,
+        "file": "pop-lettuce-640.webp"
+      }
+    ]
+  },
+  "pop-kale": {
+    "aspect": 0.6928,
+    "files": [
+      {
+        "w": 360,
+        "file": "pop-kale-360.webp"
+      },
+      {
+        "w": 640,
+        "file": "pop-kale-640.webp"
+      }
+    ]
+  }
+}
